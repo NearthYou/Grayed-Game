@@ -17,7 +17,9 @@ _잊혀진 게임들이 모이는 마을이 있다. 어느 날, 게임이 아닌
 | 개발 기간 | 2023.09 ~ 진행 중 |
 | 팀 구성 | 기획, 개발, 아트, 사운드 협업 프로젝트 |
 | 포지션 | **게임플레이 프로그래머 / CH3 시스템 구현 / 툴·UI·상호작용 개발** |
+| 영상 | [YouTube](https://www.youtube.com/watch?v=fdvunwIGKAs) |
 | 저장소 | [GitHub](https://github.com/NearthYou/Grayed-Game) |
+| 빌드 파일 | [Drive](https://drive.google.com/file/d/1NscghxWgvjWWtu2stNFduW3cMFrBb4fl/view?usp=sharing) |
 
 ---
 
