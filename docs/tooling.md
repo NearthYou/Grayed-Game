@@ -24,16 +24,16 @@ flowchart LR
 
 같은 장비와 같은 scene의 Unity Profiler record에서 Editor main thread frame time이 1084.8ms에서 52.7ms로 줄었습니다. raw log와 반복 측정 분포가 없어 평균 성능이나 일반적인 개선율로 확장하지 않습니다.
 
-## data contract
+## 데이터 계약
 
 | 책임 | 구현 |
 | --- | --- |
 | object type과 footprint | `CH3_LevelData` |
 | CSV와 ScriptableObject 연결 | `CH3_LevelDataCSVLoader`, Editor generator |
 | grid coordinate와 occupied cell | `GridSystem` |
-| editor placement | `GridTileEditor` |
-| runtime object creation | `BuildingObjectFactory` |
-| building과 production | `Structure`, `Producer`와 관련 data |
+| editor 배치 | `GridTileEditor` |
+| runtime object 생성 | `BuildingObjectFactory` |
+| 건물과 생산 | `Structure`, `Producer`와 관련 data |
 
 editor와 runtime이 같은 `CH3_LevelData`를 읽으므로 sprite, collision, footprint와 passability 기준을 한곳에서 바꿀 수 있습니다.
 
@@ -41,7 +41,7 @@ editor와 runtime이 같은 `CH3_LevelData`를 읽으므로 sprite, collision, f
 
 `GridSystem`은 world position과 grid position을 변환하고 occupied cell, spawn area와 object count를 관리합니다. building, ore, NPC와 teleporter는 grid object 계약을 통해 같은 field에 배치됩니다.
 
-`BuildingObjectFactory`는 data type을 보고 runtime class를 선택합니다. editor object와 player가 새로 만든 building이 같은 footprint와 grid state를 사용합니다.
+`BuildingObjectFactory`는 data type을 보고 runtime class를 선택합니다. editor object와 플레이어가 새로 만든 건물이 같은 footprint와 grid state를 사용합니다.
 
 ## teleporter
 
@@ -55,6 +55,6 @@ scene setup은 code 옆의 [teleporter guide](../Assets/Scripts/Runtime/CH3/Main
 
 ## Dancepace data와 flow
 
-`WaveDataSO`와 `GameConfigSO`가 wave, timing과 game rule을 보관합니다. `GameFlowManager`, `DPTimeline`, UI와 character class가 rehearsal, play와 result state를 나눠 처리합니다.
+`WaveDataSO`와 `GameConfigSO`가 wave, timing과 게임 규칙을 보관합니다. `GameFlowManager`, `DPTimeline`, UI와 character class가 rehearsal, play와 result state를 나눠 처리합니다.
 
-string comparison을 줄이고 enum과 string table을 사용해 input, text와 result를 연결합니다. source와 resource 경계는 project history의 Dancepace commit에서 확인할 수 있습니다.
+string comparison을 줄이고 enum과 string table을 사용해 input, text와 result를 연결합니다. source와 resource 경계는 프로젝트 history의 Dancepace commit에서 확인할 수 있습니다.

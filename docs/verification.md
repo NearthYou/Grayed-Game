@@ -1,20 +1,20 @@
 # 검증 기록
 
-## 현재 project 기준
+## 현재 프로젝트 기준
 
 | 항목 | 확인 결과 |
 | --- | --- |
 | Unity | 2022.3.62f2, revision `7670c08855a9` |
-| 개발 기간 | 2023.09 - 2026.01 project record |
+| 개발 기간 | 2023.09 - 2026.01 프로젝트 기록 |
 | 공개 영상 | [YouTube play video](https://www.youtube.com/watch?v=fdvunwIGKAs) |
 | 공개 build | README의 Google Drive link |
-| team result | 2024 BIC Rookie exhibition, 2024 LOGIN planning award |
+| 팀 결과 | 2024 BIC Rookie 전시, 2024 LOGIN 기획 우수상 |
 
-team result는 현재 README의 project record를 유지합니다. 이 작업에서는 행사 사이트나 award certificate를 새로 수집하지 않았습니다.
+팀 결과는 현재 README의 프로젝트 기록을 유지합니다. 이 작업에서는 행사 사이트나 수상 증서를 새로 수집하지 않았습니다.
 
 ## source 대조
 
-다음 설명은 current source에서 확인했습니다.
+다음 설명은 현재 source에서 확인했습니다.
 
 - `GridTileEditor`의 direct GridSystem reference, no forced Repaint와 occupied position HashSet
 - `CH3_LevelData`, `GridSystem`과 `BuildingObjectFactory`의 shared object rule
@@ -32,7 +32,7 @@ raw profiler log, 반복 횟수와 frame time distribution은 저장소에 없�
 
 ## 문서 정리 검증
 
-- GameOver 가제와 미완성 chapter placeholder는 current design에서 제거
+- GameOver 가제와 미완성 chapter placeholder는 현재 설계에서 제거
 - 2024 meeting, interview, recruitment와 temporary plan 삭제
 - 외부 core mechanic PDF 보존
 - package README와 license 무변경
@@ -42,6 +42,6 @@ raw profiler log, 반복 횟수와 frame time distribution은 저장소에 없�
 
 ## 자동화 범위
 
-현재 checked source에는 Unity Test Framework test assembly가 없습니다. `Assets/Scripts/Editor/Scripts.Editor.asmdef`는 editor assembly이며 test assembly가 아닙니다.
+현재 확인한 source에는 Unity Test Framework test assembly가 없습니다. `Assets/Scripts/Editor/Scripts.Editor.asmdef`는 editor assembly이며 test assembly가 아닙니다.
 
-이 문서 개편은 source inspection, project version, Git history, local link와 Markdown diff로 검증합니다. gameplay와 editor 성능을 새로 실행했다고 주장하지 않습니다.
+이 문서 개편은 source 확인, 프로젝트 version, Git history, local link와 Markdown diff로 검증합니다. gameplay와 editor 성능을 새로 실행했다고 주장하지 않습니다.

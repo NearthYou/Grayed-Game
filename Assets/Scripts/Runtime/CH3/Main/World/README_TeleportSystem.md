@@ -1,89 +1,103 @@
-# 텔레포트 타워 시스템 사용 방법
+# Teleporter system 설정
 
-## 개요
-텔레포트 타워 시스템은 베이스캠프와 TRPG 필드의 텔레포트 타워 간 자유로운 이동을 가능하게 합니다.
+CH3 teleporter는 BaseCamp와 세 필드 지역을 연결합니다. 처음 방문한 타워를 활성화하고 현재 위치를 제외한 활성 지역만 UI에 보여줍니다.
 
-## 주요 기능
-- 최초 상호작용 시 텔레포트 타워 활성화
-- 활성화된 모든 텔레포트 타워 간 자유로운 이동
-- 지역 리스트 UI 표시 (동적 크기 조절)
-- 페이드 아웃-인 연출
-- 2m 이상 멀어지면 UI 자동 닫기
-- 현재 위치/비활성화 지역은 리스트에서 제외
-- 지역 표시 순서: 베이스캠프 > 미카엘 > 파머 > 달러
+## 현재 source 계약
 
-## 씬 설정 방법
+| 항목 | 값 또는 동작 |
+| --- | --- |
+| region | `BaseCamp`, `Michael`, `Farmer`, `Dollar` |
+| 기본 활성 지역 | `BaseCamp` |
+| 표시 순서 | BaseCamp, Michael, Farmer, Dollar |
+| interaction range | 2m |
+| teleport delay | 0.1초 |
+| UI close | 플레이어가 interaction range를 벗어나면 0.1초 간격으로 확인해 닫음 |
+| 이동 중 입력 | `IsTeleporting`과 `CanInteract`로 중복 interaction 차단 |
 
-### 1. TeleporterManager 설정
-- 씬에 빈 GameObject를 생성하고 `TeleporterManager` 컴포넌트를 추가합니다.
-- 이 오브젝트는 씬에 하나만 존재해야 합니다 (싱글톤).
+별도 3초 cooldown과 UI close distance field는 현재 source에 없습니다.
 
-### 2. TeleportUI 설정
-- Canvas에 `TeleportUI` 컴포넌트를 추가합니다.
-- 인스펙터에서 다음을 설정합니다:
-  - **Region List Panel**: 지역 리스트를 표시할 패널 GameObject
-  - **Region List Content**: 버튼들이 생성될 부모 Transform (보통 Vertical Layout Group이 있는 Content)
-  - **Region Button Prefab**: 지역 버튼 프리팹 (Button 컴포넌트와 TextMeshProUGUI가 있어야 함)
-  - **Cancel Button**: 취소 버튼
-  - **Region Names**: 각 지역의 표시 이름 (기본값: 베이스캠프, 파머의 농장, 달러의 동굴, 미카엘의 지옥)
+## scene 구성
 
-### 3. 텔레포트 타워 설정
-각 텔레포트 타워 GameObject에 `Teleporter` 컴포넌트가 있어야 합니다.
+### TeleporterManager
 
-#### 베이스캠프 메인 텔레포트 타워:
-- **Region**: `BaseCamp` 선택
-- **Is Main Teleporter**: 체크
-- 이 타워는 기본적으로 활성화되어 있습니다.
+scene에 `TeleporterManager` component를 가진 object를 하나 둡니다. manager는 지역별 타워, 활성 상태와 list order를 관리합니다.
 
-#### TRPG 필드 기본 텔레포트 타워:
-- **Region**: 해당 지역 선택 (`Farmer`, `Dollar`, `Michael` 중 하나)
-- **Is Main Teleporter**: 체크 해제
-- 최초 상호작용 시 자동으로 활성화됩니다.
+### TeleportUI
 
-#### 공통 설정:
-- **Interaction Range**: 상호작용 가능 거리 (기본값: 2)
-- **Teleport Delay**: 텔레포트 지연 시간 (기본값: 0.1)
-- **Cooldown Time**: 쿨다운 시간 (기본값: 3)
-- **UI Close Distance**: UI를 닫을 거리 (기본값: 2)
+Canvas object에 `TeleportUI`를 추가하고 다음 reference를 연결합니다.
 
-### 4. UI 프리팹 구조
-지역 버튼 프리팹은 다음과 같은 구조여야 합니다:
-```
+- `Region List Panel`: 지역 list panel GameObject
+- `Region List Content`: button parent Transform
+- `Region Button Prefab`: Button과 TextMeshProUGUI를 가진 prefab
+- `Cancel Button`: list를 닫는 button
+- region name field: BaseCamp, Farmer, Dollar, Michael의 표시 이름
+
+region button은 모든 enum value를 한 번 만들고 활성 list에 포함된 button만 보여줍니다.
+
+### Teleporter
+
+각 타워에 `Teleporter` component를 둡니다.
+
+BaseCamp 타워 설정:
+
+- `Region`: `BaseCamp`
+- `Is Main Teleporter`: enabled
+- 게임 시작 시 자동 활성
+
+필드 타워 설정:
+
+- `Region`: `Michael`, `Farmer`, `Dollar` 중 하나
+- `Is Main Teleporter`: disabled
+- 처음 interaction할 때 활성
+
+공통 field:
+
+- `Interaction Range`: 기본 2
+- `Teleport Delay`: 기본 0.1
+
+### Button prefab
+
+```text
 RegionButton (Button)
-  └─ Text (TextMeshProUGUI)
+└─ Text (TextMeshProUGUI)
 ```
 
-## 동작 방식
+## 동작 순서
 
-1. **활성화**: 플레이어가 텔레포트 타워와 상호작용하면 해당 타워가 활성화됩니다.
-2. **UI 표시**: 활성화된 타워와 상호작용하면 이동 가능한 지역 리스트가 화면 중앙에 표시됩니다.
-3. **이동**: 리스트에서 지역을 선택하면 페이드 아웃 → 이동 → 페이드 인이 실행됩니다.
-4. **UI 자동 닫기**: 플레이어가 텔레포트 타워에서 2m 이상 멀어지면 UI가 자동으로 닫힙니다.
+1. 플레이어가 비활성 타워와 interaction하면 해당 지역을 활성 상태로 등록합니다.
+2. 현재 지역을 제외한 활성 지역을 manager priority 순서로 가져옵니다.
+3. `TeleportUI`가 해당 button만 보여줍니다.
+4. 플레이어가 region을 선택하면 UI를 닫고 fade out을 시작합니다.
+5. target tower의 grid position 아래 cell로 플레이어를 옮깁니다.
+6. fade in과 0.1초 delay 뒤 두 타워의 interaction state를 reset합니다.
 
-## 주의사항
+main tower 외에 활성 지역이 없으면 BaseCamp UI를 열지 않습니다. target tower를 찾지 못한 경우에도 이동하지 않습니다.
 
-- 베이스캠프 메인 텔레포트 타워는 기본 활성화되어 있습니다.
-- 다른 활성화된 타워가 없으면 베이스캠프 메인 텔레포트 타워와 상호작용해도 UI가 표시되지 않습니다.
-- 현재 위치한 지역과 비활성화된 지역은 리스트에서 제외됩니다.
-- FadeController가 씬에 있어야 페이드 연출이 작동합니다.
+## distance close
 
-## 코드 예시
+UI를 연 타워는 현재 플레이어와의 squared distance를 0.1초 간격으로 확인합니다. 거리가 `interactionRange`보다 커지면 UI를 닫고 current interactor를 지웁니다.
 
-### 텔레포트 타워 활성화 상태 확인
+별도 close distance를 inspector에서 맞출 필요가 없습니다. interaction range가 UI close 기준도 함께 소유합니다.
+
+## fade와 position
+
+scene에 `FadeController`가 있으면 fade out과 fade in duration을 기다립니다. controller가 없어도 position change는 진행합니다.
+
+target position은 target tower의 `GridPosition`에서 y grid를 한 칸 줄인 위치입니다. 플레이어에 Rigidbody가 있으면 velocity를 지우고 `rb.position`을 바꾸며, 없으면 Transform position을 사용합니다.
+
+## code check
+
 ```csharp
-if (TeleporterManager.Instance.IsTeleporterActivated(TeleportRegion.Farmer))
-{
-    Debug.Log("파머의 농장 텔레포트 타워가 활성화되어 있습니다.");
-}
+bool active = TeleporterManager.Instance.IsTeleporterActivated(
+    TeleportRegion.Farmer);
+
+Teleporter target = TeleporterManager.Instance.GetTeleporter(
+    TeleportRegion.BaseCamp);
 ```
 
-### 특정 지역으로 텔레포트
-```csharp
-Teleporter teleporter = TeleporterManager.Instance.GetTeleporter(TeleportRegion.BaseCamp);
-if (teleporter != null)
-{
-    GameObject player = GameObject.FindGameObjectWithTag("Player");
-    teleporter.TeleportToRegion(TeleportRegion.Farmer, player);
-}
-```
+setup이 source와 어긋나면 다음 파일을 함께 확인합니다.
 
+- `Teleporter.cs`
+- `TeleporterManager.cs`
+- `TeleportUI.cs`
+- `GridSystem.cs`
