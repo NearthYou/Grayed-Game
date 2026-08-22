@@ -1,4 +1,4 @@
-# CH3 제작 도구와 runtime 구조
+# 제작 도구와 미니게임 구조
 
 ## 기획자 편집 흐름
 
@@ -37,11 +37,64 @@ flowchart LR
 
 editor와 runtime이 같은 `CH3_LevelData`를 읽으므로 sprite, collision, footprint와 passability 기준을 한곳에서 바꿀 수 있습니다.
 
+```mermaid
+classDiagram
+    class CH3_LevelData
+    class CH3_LevelDataCSVLoader
+    class CH3_LevelDataSOGenerator
+    class GridObjectDataManager
+    class GridTileEditor
+    class BuildingObjectFactory
+    class GridSystem
+    class GridObject
+
+    CH3_LevelDataSOGenerator --> CH3_LevelDataCSVLoader : CSV 읽기
+    CH3_LevelDataCSVLoader --> CH3_LevelData : runtime data 생성
+    CH3_LevelDataSOGenerator --> CH3_LevelData : ScriptableObject 저장
+    GridObjectDataManager --> CH3_LevelData : editor cache
+    GridTileEditor --> GridObjectDataManager : object 생성
+    GridTileEditor --> GridSystem : 좌표와 spawn 갱신
+    BuildingObjectFactory --> CH3_LevelData : runtime 규칙 읽기
+    BuildingObjectFactory --> GridObject : type별 component 생성
+    GridObject --> GridSystem : occupied cell 등록
+```
+
+Editor에서는 `GridObjectDataManager`, runtime에서는 `BuildingObjectFactory`가 같은 `CH3_LevelData`를 읽습니다. 둘은 object 생성 시점이 다르지만 footprint와 sprite, collision 기준을 공유합니다.
+
 ## runtime grid
 
 `GridSystem`은 world position과 grid position을 변환하고 occupied cell, spawn area와 object count를 관리합니다. building, ore, NPC와 teleporter는 grid object 계약을 통해 같은 field에 배치됩니다.
 
 `BuildingObjectFactory`는 data type을 보고 runtime class를 선택합니다. editor object와 플레이어가 새로 만든 건물이 같은 footprint와 grid state를 사용합니다.
+
+## CH2 SuperArio 플랫포머
+
+```mermaid
+classDiagram
+    class ArioManager
+    class Ario
+    class Mario
+    class ObstacleManager
+    class ObstacleBase
+    class EnterPipe
+    class ArioStore
+    class ItemBox
+    class ExitPipe
+
+    ArioManager o-- Ario : player state
+    ArioManager o-- Mario : partner state
+    ArioManager o-- ObstacleManager : stage spawn
+    ObstacleManager --> ObstacleBase : pool과 이동
+    Ario --> ArioManager : life, coin과 item event
+    Mario --> ObstacleBase : jump 또는 sit 판단
+    EnterPipe --> ArioManager : store 전환
+    ArioStore --> ItemBox : 구매와 사용
+    ExitPipe --> ArioStore : stage 복귀
+```
+
+`ArioManager`는 stage, play, pause, store, reward와 game-over state를 조율합니다. `Ario`와 `Mario`는 이동과 충돌 반응을 맡고, `ObstacleManager`는 pool을 재사용해 stage data에 맞는 obstacle을 흘려보냅니다.
+
+상점은 `EnterPipe`에서 별도 camera와 `ArioStore` state로 전환됩니다. `ItemBox`는 coin 조건과 사용 결과를 나누며 `ExitPipe`가 main stage 복귀를 요청합니다. 실제 구현은 `Assets/Scripts/Runtime/CH2/SuperArio`에서 확인할 수 있습니다.
 
 ## teleporter
 

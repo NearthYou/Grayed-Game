@@ -6,6 +6,8 @@
 
 [플레이 영상](https://www.youtube.com/watch?v=fdvunwIGKAs) | [공개 build](https://drive.google.com/file/d/1NscghxWgvjWWtu2stNFduW3cMFrBb4fl/view?usp=sharing)
 
+[![Grayed Game 실제 플레이 영상](https://img.youtube.com/vi/fdvunwIGKAs/hqdefault.jpg)](https://www.youtube.com/watch?v=fdvunwIGKAs)
+
 [게임 설계](docs/game-design.md) | [제작 도구](docs/tooling.md) | [개인 기여](docs/contributions.md) | [검증](docs/verification.md)
 
 ## 프로젝트 개요
@@ -17,7 +19,7 @@
 | 장르 | 2D 어드벤처, 미니게임, 메타픽션 |
 | 개발 기간 | 2023.09 - 2026.01 |
 | 협업 | 기획, 개발, 아트, 사운드 팀 프로젝트 |
-| 개인 역할 | 게임플레이 프로그래머, CH3 시스템, 에디터 도구, UI와 상호작용 |
+| 개인 역할 | 게임플레이 프로그래머, CH2 SuperArio, CH3 시스템, 에디터 도구, Dancepace와 상호작용 |
 
 Grayed Game은 잊힌 게임이 모이는 마을에서 라플리가 여러 게임의 규칙을 사용해 사건을 해결하는 이야기입니다. top-down 탐험을 중심에 두고 리듬, 플랫폼, TRPG, 자원 수집과 건설 규칙을 접속 콘텐츠로 연결합니다.
 
@@ -37,10 +39,11 @@ Grayed Game은 잊힌 게임이 모이는 마을에서 라플리가 여러 게�
 
 ## 개인 기여
 
-이시원은 2024년 10월부터 2026년 1월까지 프로그래머 2명 체제에서 CH3와 Dancepace를 중심으로 작업했습니다.
+이시원은 2024년 10월부터 2026년 1월까지 프로그래머 2명 체제에서 CH2 SuperArio 플랫포머, CH3와 Dancepace를 중심으로 작업했습니다.
 
 | 영역 | 구현 범위 |
 | --- | --- |
+| CH2 SuperArio | player 이동과 jump buffer, obstacle pool과 stage, item box, 상점, pipe 전환과 reward room |
 | CH3 grid | world와 grid 좌표, occupied cell, spawn과 object state |
 | Tile editor | type 선택, click과 drag 배치, spawn point, block fill과 겹침 방지 |
 | Building | build mode, preview, factory, production, crafting과 inventory |
@@ -50,6 +53,12 @@ Grayed Game은 잊힌 게임이 모이는 마을에서 라플리가 여러 게�
 | Maintenance | reflection 제거, editor build 제외, 사용하지 않는 field와 memory risk 정리 |
 
 파일과 commit별 근거는 [개인 기여 문서](docs/contributions.md)에 구분했습니다.
+
+### CH2 SuperArio 플랫포머
+
+`Assets/Scripts/Runtime/CH2/SuperArio`는 횡스크롤 이동, jump와 피격, obstacle spawn, coin과 item, 상점, pipe, stage와 reward 흐름을 한 scene 안에서 조율합니다. `ArioManager`가 stage state를 관리하고 player와 obstacle class는 각 동작을 나눠 맡습니다.
+
+해당 경로의 Git history에는 이시원 계정 두 개로 기록된 commit 89개와 다른 contributor commit 4개가 있습니다. commit 수를 기여량 점수로 쓰지 않고, 초기 input 교체부터 stage, 상점, jump buffer, 연출, balancing과 bug fix까지 직접 변경한 범위를 찾는 근거로만 사용했습니다.
 
 ## 대표 문제: 기획자가 직접 맵을 고치게 만들기
 
@@ -76,7 +85,7 @@ flowchart LR
 
 editor 배치와 플레이 중 건설이 같은 data rule을 사용합니다. `GridSystem`은 occupied cell과 spawn을 관리하고 `BuildingObjectFactory`는 type에 맞는 runtime object를 만듭니다.
 
-세부 흐름과 teleporter, Dancepace data는 [제작 도구 문서](docs/tooling.md)에 있습니다.
+세부 흐름과 SuperArio, teleporter, Dancepace data는 [제작 도구 문서](docs/tooling.md)에 있습니다.
 
 ## 실행
 

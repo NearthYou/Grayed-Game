@@ -14,12 +14,13 @@ Grayed Game은 기획, 개발, 아트와 사운드가 함께 만든 팀 프로�
 | --- | --- |
 | 참여 기간 | 2024.10 - 2026.01 |
 | 협업 형태 | 프로그래머 2명과 기획, 아트, 사운드 직군 협업 |
-| 주요 범위 | CH3 grid, editor tool, 건설과 생산, teleporter, Dancepace, dialogue와 interaction |
+| 주요 범위 | CH2 SuperArio, CH3 grid, editor tool, 건설과 생산, teleporter, Dancepace, dialogue와 interaction |
 
 ## source와 Git history에서 확인되는 작업
 
 | 영역 | 대표 작업 | 근거 |
 | --- | --- | --- |
+| CH2 SuperArio | input, 이동과 jump buffer, obstacle와 stage, store와 pipe, reward와 연출 | `99bb3e07`, `078e8eb8`, `d652b906`, `b2f88bda`, `36a33c15` 외 해당 경로 history |
 | CH3 base | 플레이어 movement, grid, minimap, 자원과 object interaction | 2025-02부터 2025-08까지 CH3 commit |
 | Dancepace | data, wave, input timing, character, UI와 sound presentation | 2025-06부터 2026-01까지 Dancepace commit |
 | Tile editor | placement, spawn point, block fill, 좌표와 겹침 fix | `31d47943`, `1a2a4924`, `e7c62cdf`, `48d4956e` |
@@ -28,6 +29,8 @@ Grayed Game은 기획, 개발, 아트와 사운드가 함께 만든 팀 프로�
 | 유지보수 | reflection 제거, memory risk 정리, editor build 제외 | `d1d2a407`, `220c1d84`, `58dcede5` |
 
 commit은 작업 범위를 찾는 근거입니다. merge 뒤 다른 programmer와 직군이 수정한 결과까지 개인 단독 구현으로 넓혀 쓰지 않습니다.
+
+SuperArio 경로에는 이시원 Git identity 두 개로 기록된 commit 89개와 다른 contributor commit 4개가 있습니다. 수치는 ownership 비율이 아니라 subsystem에서 직접 수정한 기간과 범위를 찾는 색인입니다. art, sound, level feedback과 이후 통합은 팀 작업으로 남깁니다.
 
 ## 대표 문제
 
