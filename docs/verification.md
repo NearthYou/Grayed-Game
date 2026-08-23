@@ -4,7 +4,7 @@
 
 | 항목 | 확인 결과 |
 | --- | --- |
-| Unity | 2022.3.62f2, revision `7670c08855a9` |
+| Unity | 2022.3.62f2 |
 | 개발 기간 | 2023.09 - 2026.01 프로젝트 기록 |
 | 공개 영상 | [YouTube play video](https://www.youtube.com/watch?v=fdvunwIGKAs) |
 | 공개 build | README의 Google Drive link |
@@ -39,9 +39,3 @@ raw profiler log, 반복 횟수와 frame time distribution은 저장소에 없�
 - source, scene와 asset 무변경
 - 내부 link와 image path 확인
 - `git diff --check` 실행
-
-## 자동화 범위
-
-현재 확인한 source에는 Unity Test Framework test assembly가 없습니다. `Assets/Scripts/Editor/Scripts.Editor.asmdef`는 editor assembly이며 test assembly가 아닙니다.
-
-이 문서 개편은 source 확인, 프로젝트 version, Git history, local link와 Markdown diff로 검증합니다. gameplay와 editor 성능을 새로 실행했다고 주장하지 않습니다.

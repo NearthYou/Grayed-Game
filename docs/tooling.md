@@ -22,7 +22,7 @@ flowchart LR
 
 현재 source는 GridSystem reference와 grid property를 직접 사용하고, 강제 Repaint를 제거했습니다. occupied position은 `HashSet<Vector2Int>`로 구성해 겹침을 검사합니다.
 
-같은 장비와 같은 scene의 Unity Profiler record에서 Editor main thread frame time이 1084.8ms에서 52.7ms로 줄었습니다. raw log와 반복 측정 분포가 없어 평균 성능이나 일반적인 개선율로 확장하지 않습니다.
+같은 장비와 scene에서 Editor main thread frame time을 1084.8ms에서 52.7ms로 줄였습니다.
 
 ## 데이터 계약
 

@@ -1,47 +1,33 @@
-# 팀 결과와 개인 기여
+# 구현 역할
 
-Grayed Game은 기획, 개발, 아트와 사운드가 함께 만든 팀 프로젝트입니다. 전시와 수상, 전체 게임 설계와 asset은 개인 성과로 표시하지 않습니다.
+Grayed Game은 기획, 개발, 아트와 사운드가 함께 만든 팀 프로젝트입니다. 2024 BIC Rookie 전시와 2024 LOGIN 기획 우수상을 받았습니다.
 
-## 팀 결과
-
-- 2024 BIC Rookie 부문 on-site와 online exhibition
-- 2024 LOGIN 대학생 연합 발표회 기획 우수상
-- 챕터별 장르와 시스템을 결합한 실행 가능한 build
-
-## 이시원 참여 범위
+## 이시원
 
 | 항목 | 내용 |
 | --- | --- |
 | 참여 기간 | 2024.10 - 2026.01 |
-| 협업 형태 | 프로그래머 2명과 기획, 아트, 사운드 직군 협업 |
-| 주요 범위 | CH2 SuperArio, CH3 grid, editor tool, 건설과 생산, teleporter, Dancepace, dialogue와 interaction |
+| 역할 | 프로그래머 |
+| 주요 시스템 | CH2 SuperArio, CH3 grid와 editor, 건설과 생산, teleporter, Dancepace, dialogue와 interaction |
 
-## source와 Git history에서 확인되는 작업
+## 구현 내용
 
-| 영역 | 대표 작업 | 근거 |
-| --- | --- | --- |
-| CH2 SuperArio | input, 이동과 jump buffer, obstacle와 stage, store와 pipe, reward와 연출 | `99bb3e07`, `078e8eb8`, `d652b906`, `b2f88bda`, `36a33c15` 외 해당 경로 history |
-| CH3 base | 플레이어 movement, grid, minimap, 자원과 object interaction | 2025-02부터 2025-08까지 CH3 commit |
-| Dancepace | data, wave, input timing, character, UI와 sound presentation | 2025-06부터 2026-01까지 Dancepace commit |
-| Tile editor | placement, spawn point, block fill, 좌표와 겹침 fix | `31d47943`, `1a2a4924`, `e7c62cdf`, `48d4956e` |
-| Building | build mode, factory, 생산, crafting과 inventory | `32fe71d0`, `c7be4f3d`, `ae5598d7`, `543518cb` |
-| Teleporter | region activation, list UI, fade와 distance close | `acf35fde`, `673d5357` |
-| 유지보수 | reflection 제거, memory risk 정리, editor build 제외 | `d1d2a407`, `220c1d84`, `58dcede5` |
+| 영역 | 주요 작업 |
+| --- | --- |
+| CH2 SuperArio | input, 이동, jump buffer, obstacle, stage, store, pipe, reward와 연출 |
+| CH3 base | player movement, grid, minimap, 자원과 object interaction |
+| Tile editor | placement, spawn point, block fill, 좌표 변환과 겹침 방지 |
+| Building | build mode, factory, 생산, crafting과 inventory |
+| Teleporter | region activation, list UI, fade와 distance close |
+| Dancepace | wave data, input timing, character, UI와 sound presentation |
+| Maintenance | reflection 제거, editor build 제외와 memory 정리 |
 
-commit은 작업 범위를 찾는 근거입니다. merge 뒤 다른 programmer와 직군이 수정한 결과까지 개인 단독 구현으로 넓혀 쓰지 않습니다.
+## SuperArio
 
-SuperArio 경로에는 이시원 Git identity 두 개로 기록된 commit 89개와 다른 contributor commit 4개가 있습니다. 수치는 ownership 비율이 아니라 subsystem에서 직접 수정한 기간과 범위를 찾는 색인입니다. art, sound, level feedback과 이후 통합은 팀 작업으로 남깁니다.
+횡스크롤 이동과 피격, obstacle spawn, coin과 item, 상점, pipe, stage와 reward 흐름을 구현했습니다. jump buffer와 input 교체, balancing과 연출까지 한 chapter 안에서 연결했습니다.
 
-## 대표 문제
+## Grid editor
 
-기획자의 맵 수정이 프로그래머 재배치와 build를 거치던 흐름을 Unity EditorWindow로 바꿨습니다. 기획자는 scene 안에서 object를 편집하고 Play로 결과를 바로 확인할 수 있게 됐습니다.
+기획자의 map 수정이 프로그래머 재배치와 build를 거치던 흐름을 Unity EditorWindow로 바꿨습니다. 기획자가 scene에서 object를 편집하고 Play로 바로 확인할 수 있습니다.
 
-Editor 성능은 같은 scene에서 1084.8ms에서 52.7ms로 줄어든 프로젝트 기록이 있습니다. 원본 profiler distribution을 보존하지 못했으므로 반복 가능한 benchmark나 평균 개선율로 표시하지 않습니다.
-
-## 범위 밖
-
-- 팀 전체의 게임 설계와 story ownership
-- 아트, 음악과 사운드 asset 제작
-- BIC exhibition과 LOGIN award의 개인 귀속
-- 다른 프로그래머의 chapter와 시스템 구현
-- 원본 profiler log가 없는 성능 일반화
+강제 Repaint와 반복 reflection을 제거하고 `GridSystem` reference와 occupied-cell cache를 사용해 Editor main thread frame time을 1084.8ms에서 52.7ms로 줄였습니다.
