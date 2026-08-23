@@ -54,21 +54,31 @@ Grayed Game은 잊힌 게임이 모이는 마을에서 라플리가 여러 게�
 
 파일과 commit별 근거는 [개인 기여 문서](docs/contributions.md)에 구분했습니다.
 
-### CH2 SuperArio 플랫포머
+### CH2 SuperArio 플랫포머 기여
 
-`Assets/Scripts/Runtime/CH2/SuperArio`는 횡스크롤 이동, jump와 피격, obstacle spawn, coin과 item, 상점, pipe, stage와 reward 흐름을 한 scene 안에서 조율합니다. `ArioManager`가 stage state를 관리하고 player와 obstacle class는 각 동작을 나눠 맡습니다.
+`Assets/Scripts/Runtime/CH2/SuperArio`에는 횡스크롤 이동과 피격, obstacle spawn, coin과 item, 상점, pipe, stage와 reward 흐름이 있습니다. `ArioManager`는 stage state를, player와 obstacle class는 각 동작을 맡습니다.
 
-해당 경로의 Git history에는 이시원 계정 두 개로 기록된 commit 89개와 다른 contributor commit 4개가 있습니다. commit 수를 기여량 점수로 쓰지 않고, 초기 input 교체부터 stage, 상점, jump buffer, 연출, balancing과 bug fix까지 직접 변경한 범위를 찾는 근거로만 사용했습니다.
+해당 경로의 Git history에는 이시원 계정 두 개로 기록된 commit 89개와 다른 contributor commit 4개가 있습니다. 이 수치는 ownership 비율이 아니라 input 교체, stage, 상점, jump buffer, 연출, balancing과 bug fix의 변경 범위를 찾는 색인입니다.
 
-## 대표 문제: 기획자가 직접 맵을 고치게 만들기
+## 대표 문제: 기획 변경을 바로 확인하는 Grid editor
 
-기획자가 spreadsheet로 전달한 맵을 프로그래머가 Unity scene에 다시 배치하던 흐름이었습니다. 작은 변경도 프로그래머와 빌드를 거쳐야 했고 기획자는 결과를 바로 확인하기 어려웠습니다.
+기획자는 spreadsheet로 map 수정을 전달했고, 프로그래머가 Unity scene에 다시 배치했습니다. 작은 content 변경도 구현자와 build를 거쳐야 해서 기획자는 결과를 바로 확인하기 어려웠습니다.
 
-`GridTileEditor`를 만들어 기획자가 Scene View에서 object를 배치하고 삭제하며 Play로 확인하게 했습니다. editor와 runtime은 같은 `CH3_LevelData`를 읽어 footprint, sprite, collision과 passability를 공유합니다.
+### 반복 비용의 원인
 
-첫 구현은 GridSystem search, reflection, 강제 Repaint와 object scan을 반복했습니다. 현재 source는 GridSystem reference와 property를 직접 사용하고 occupied position을 `HashSet`으로 구성합니다.
+초기 editor는 Scene View update마다 `GridSystem` search와 reflection을 수행하고, 강제 Repaint와 배치 object scan을 반복했습니다. 편집 확인을 빠르게 하려던 흐름이 반복 탐색과 redraw 비용까지 함께 만들었습니다.
 
-같은 장비와 같은 scene의 프로젝트 기록에서 Editor main thread frame time은 1084.8ms에서 52.7ms로 줄었습니다. 원본 profiler log와 반복 측정 분포가 없어 benchmark나 평균 개선율로 일반화하지 않습니다.
+### 선택한 경계
+
+`GridTileEditor`에서 기획자가 Scene View로 object를 배치하거나 삭제하고, 같은 scene을 Play로 확인하도록 했습니다. object type, footprint, sprite, collision과 passability는 `CH3_LevelData`에 두어 editor와 runtime이 같은 규칙을 읽게 했습니다.
+
+editor는 `GridObjectDataManager`를 통해 배치하고, runtime은 `BuildingObjectFactory`가 같은 data를 읽어 object를 만듭니다. `GridSystem`은 world와 grid 좌표, occupied cell과 spawn을 관리합니다. 이 경계로 편집 시점과 실행 시점의 생성 책임은 나누되 object 규칙은 한곳에서 유지했습니다.
+
+강제 Repaint를 없애고 `GridSystem` reference와 공개 property를 직접 사용했습니다. occupied position은 `HashSet`으로 구성해 겹침을 확인하고, child count가 바뀔 때만 다시 수집합니다.
+
+### 관측과 한계
+
+같은 장비와 같은 scene의 프로젝트 기록에서 Editor main thread frame time은 1084.8ms에서 52.7ms였습니다. raw profiler log와 반복 측정 분포가 없으므로 이 값은 당시 same-scene observation이며 benchmark, 평균 개선율이나 일반 성능 수치로 쓰지 않습니다.
 
 ## CH3 editor와 runtime
 
