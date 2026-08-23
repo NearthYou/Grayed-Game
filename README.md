@@ -60,15 +60,19 @@ Grayed Game은 잊힌 게임이 모이는 마을에서 라플리가 여러 게�
 
 해당 경로의 Git history에는 이시원 계정 두 개로 기록된 commit 89개와 다른 contributor commit 4개가 있습니다. 이 수치는 ownership 비율이 아니라 input 교체, stage, 상점, jump buffer, 연출, balancing과 bug fix의 변경 범위를 찾는 색인입니다.
 
-## 대표 문제: 기획 변경을 바로 확인하는 Grid editor
+## 문제 해결 과정
+
+각 사례는 문제와 원인, 선택과 구현, 검증과 한계 순서로 정리했습니다.
+
+### 기획 변경을 바로 확인하는 Grid editor
 
 기획자는 spreadsheet로 map 수정을 전달했고, 프로그래머가 Unity scene에 다시 배치했습니다. 작은 content 변경도 구현자와 build를 거쳐야 해서 기획자는 결과를 바로 확인하기 어려웠습니다.
 
-### 반복 비용의 원인
+#### 반복 비용의 원인
 
 초기 editor는 Scene View update마다 `GridSystem` search와 reflection을 수행하고, 강제 Repaint와 배치 object scan을 반복했습니다. 편집 확인을 빠르게 하려던 흐름이 반복 탐색과 redraw 비용까지 함께 만들었습니다.
 
-### 선택한 경계
+#### 선택한 경계
 
 `GridTileEditor`에서 기획자가 Scene View로 object를 배치하거나 삭제하고, 같은 scene을 Play로 확인하도록 했습니다. object type, footprint, sprite, collision과 passability는 `CH3_LevelData`에 두어 editor와 runtime이 같은 규칙을 읽게 했습니다.
 
@@ -76,7 +80,7 @@ editor는 `GridObjectDataManager`를 통해 배치하고, runtime은 `BuildingOb
 
 강제 Repaint를 없애고 `GridSystem` reference와 공개 property를 직접 사용했습니다. occupied position은 `HashSet`으로 구성해 겹침을 확인하고, child count가 바뀔 때만 다시 수집합니다.
 
-### 관측과 한계
+#### 검증과 한계
 
 같은 장비와 같은 scene의 프로젝트 기록에서 Editor main thread frame time은 1084.8ms에서 52.7ms였습니다. raw profiler log와 반복 측정 분포가 없으므로 이 값은 당시 same-scene observation이며 benchmark, 평균 개선율이나 일반 성능 수치로 쓰지 않습니다.
 
