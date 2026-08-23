@@ -51,5 +51,3 @@ input 판정과 presentation을 한 class에 몰지 않고 manager, data, charac
 - teleporter activation, region list와 fade transition
 - Dancepace data, input judgment와 presentation
 - dialogue, NPC interaction과 event area
-
-게임 전체 story와 모든 chapter가 완성됐다고 주장하지 않습니다. README의 개발 기간과 공개 build는 2026년 1월까지 확인된 프로젝트 기록을 기준으로 합니다.

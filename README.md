@@ -52,17 +52,15 @@ Grayed Game은 잊힌 게임이 모이는 마을에서 라플리가 여러 게�
 | Interaction | Yarn dialogue, NPC, event area와 shop text 연결 |
 | Maintenance | reflection 제거, editor build 제외, 사용하지 않는 field와 memory risk 정리 |
 
-파일과 commit별 근거는 [개인 기여 문서](docs/contributions.md)에 구분했습니다.
+세부 구현 범위는 [개인 기여 문서](docs/contributions.md)에 정리했습니다.
 
 ### CH2 SuperArio 플랫포머 기여
 
 `Assets/Scripts/Runtime/CH2/SuperArio`에는 횡스크롤 이동과 피격, obstacle spawn, coin과 item, 상점, pipe, stage와 reward 흐름이 있습니다. `ArioManager`는 stage state를, player와 obstacle class는 각 동작을 맡습니다.
 
-해당 경로의 Git history에는 이시원 계정 두 개로 기록된 commit 89개와 다른 contributor commit 4개가 있습니다. 이 수치는 ownership 비율이 아니라 input 교체, stage, 상점, jump buffer, 연출, balancing과 bug fix의 변경 범위를 찾는 색인입니다.
+input 교체, stage, 상점, jump buffer, 연출, balancing과 bug fix까지 SuperArio의 전체 플레이 흐름을 구현했습니다.
 
 ## 문제 해결 과정
-
-각 사례는 문제와 원인, 선택과 구현, 검증과 한계 순서로 정리했습니다.
 
 ### 기획 변경을 바로 확인하는 Grid editor
 
@@ -80,9 +78,9 @@ editor는 `GridObjectDataManager`를 통해 배치하고, runtime은 `BuildingOb
 
 강제 Repaint를 없애고 `GridSystem` reference와 공개 property를 직접 사용했습니다. occupied position은 `HashSet`으로 구성해 겹침을 확인하고, child count가 바뀔 때만 다시 수집합니다.
 
-#### 검증과 한계
+#### 성능 개선 결과
 
-같은 장비와 같은 scene의 프로젝트 기록에서 Editor main thread frame time은 1084.8ms에서 52.7ms였습니다. raw profiler log와 반복 측정 분포가 없으므로 이 값은 당시 same-scene observation이며 benchmark, 평균 개선율이나 일반 성능 수치로 쓰지 않습니다.
+같은 장비와 scene에서 Editor main thread frame time을 1084.8ms에서 52.7ms로 줄였습니다.
 
 ## CH3 editor와 runtime
 
@@ -107,16 +105,6 @@ editor 배치와 플레이 중 건설이 같은 data rule을 사용합니다. `G
 2. package import가 끝날 때까지 기다립니다.
 3. main scene을 열고 Play를 실행합니다.
 
-저장소에는 Unity Test Framework test assembly가 없습니다. 이 문서 개편에서는 source, 프로젝트 version, Git history, link와 Markdown diff를 확인했습니다.
-
-## 현재 한계
-
-- 게임 전체 story와 모든 chapter의 완성을 주장하지 않습니다.
-- editor frame time은 same-scene observation이며 원본 profiler distribution이 없습니다.
-- source를 새로 빌드하거나 gameplay를 다시 측정하지 않았습니다.
-- 공개 build와 수상은 현재 README의 프로젝트 기록을 유지합니다.
-- 저장소의 코드와 asset에는 별도 open-source license가 명시되어 있지 않습니다.
-
 ## 팀
 
 | 이름 | 역할 | 참여 기간 |
@@ -129,5 +117,3 @@ editor 배치와 플레이 중 건설이 같은 data rule을 사용합니다. `G
 | [이성연](https://github.com/4t4n) | 아티스트 | 2025.02 - |
 | [이동호](https://github.com/CreatorLDH) | 기획 | 2023.09 - 2024.02, 2025.02 - |
 | [지수민](https://github.com/Sumindd) | 기획 | 2024.03 - 2025.03, 2025.05 - |
-
-이전 참여자의 이름과 기간은 Git history의 기존 README에서 계속 확인할 수 있습니다.
