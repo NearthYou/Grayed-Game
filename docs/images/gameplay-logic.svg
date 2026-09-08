@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
+  <title id="title">플랫포머 상태 전환과 리듬 입력 판정 구조</title>
+  <desc id="desc">플랫포머에서 스테이지, 상점, 보상 공간을 오가는 상태 전환과 리듬 게임에서 입력 시점을 비트 길이로 나누어 판정하는 흐름</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#ea580c"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.09"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="820" rx="36" fill="#f8fafc"/>
+
+  <rect x="55" y="55" width="725" height="710" rx="30" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+  <text x="105" y="120" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="34" font-weight="700" fill="#0f172a">플랫포머 화면 전환</text>
+  <text x="105" y="160" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="22" fill="#64748b">한 장면 안에서 입력, 화면, UI와 소리를 함께 바꿉니다.</text>
+
+  <rect x="110" y="220" width="230" height="95" rx="20" fill="#fff7ed" stroke="#fb923c" stroke-width="3" filter="url(#shadow)"/>
+  <text x="225" y="260" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="27" font-weight="700" fill="#9a3412">스테이지</text>
+  <text x="225" y="292" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="19" fill="#9a3412">달리기와 장애물</text>
+
+  <path d="M340 267 H465" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M465 295 H340" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="495" y="220" width="230" height="95" rx="20" fill="#eff6ff" stroke="#60a5fa" stroke-width="3" filter="url(#shadow)"/>
+  <text x="610" y="260" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="27" font-weight="700" fill="#1e3a8a">상점</text>
+  <text x="610" y="292" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="19" fill="#1e40af">구매 뒤 이어서 플레이</text>
+
+  <path d="M225 315 V405" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="110" y="435" width="230" height="95" rx="20" fill="#f5f3ff" stroke="#a78bfa" stroke-width="3" filter="url(#shadow)"/>
+  <text x="225" y="475" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="27" font-weight="700" fill="#4c1d95">보상 공간</text>
+  <text x="225" y="507" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="19" fill="#5b21b6">스테이지 결과 처리</text>
+
+  <path d="M340 482 H465" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="495" y="435" width="230" height="95" rx="20" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3" filter="url(#shadow)"/>
+  <text x="610" y="475" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="27" font-weight="700" fill="#334155">마을 복귀</text>
+  <text x="610" y="507" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="19" fill="#475569">진행 상태 저장</text>
+
+  <rect x="110" y="590" width="615" height="115" rx="22" fill="#111827"/>
+  <text x="418" y="635" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="26" font-weight="700" fill="#ffffff">상태 전환을 한곳에서 관리</text>
+  <text x="418" y="675" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="21" fill="#cbd5e1">입력 잠금, 카메라 우선순위, UI, 체력, 코인, BGM을 함께 갱신</text>
+  <path d="M418 590 V555" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="820" y="55" width="725" height="710" rx="30" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+  <text x="870" y="120" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="34" font-weight="700" fill="#0f172a">리듬 입력 판정</text>
+  <text x="870" y="160" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="22" fill="#64748b">입력 시간을 비트 길이로 나눠 서로 다른 박자를 같은 기준으로 봅니다.</text>
+
+  <rect x="870" y="215" width="265" height="92" rx="20" fill="#f5f3ff" stroke="#a78bfa" stroke-width="3"/>
+  <text x="1003" y="253" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" font-weight="700" fill="#4c1d95">패턴 데이터</text>
+  <text x="1003" y="284" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="19" fill="#5b21b6">자세와 비트 길이</text>
+  <rect x="1265" y="215" width="230" height="92" rx="20" fill="#fff7ed" stroke="#fb923c" stroke-width="3"/>
+  <text x="1380" y="253" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" font-weight="700" fill="#9a3412">사용자 입력</text>
+  <text x="1380" y="284" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="19" fill="#9a3412">누른 키와 시점</text>
+
+  <path d="M1003 307 V380 H1182" stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1380 307 V380 H1280" stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="1110" y="350" width="275" height="100" rx="22" fill="#111827"/>
+  <text x="1248" y="391" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" font-weight="700" fill="#ffffff">입력 시점</text>
+  <line x1="1190" y1="408" x2="1305" y2="408" stroke="#94a3b8" stroke-width="2"/>
+  <text x="1248" y="439" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="21" fill="#cbd5e1">비트 길이로 나눔</text>
+
+  <text x="870" y="515" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="23" font-weight="700" fill="#334155">한 비트를 0부터 1까지로 놓고 가운데를 기준으로 판정합니다</text>
+  <rect x="890" y="565" width="610" height="72" rx="18" fill="#fee2e2"/>
+  <rect x="1000" y="565" width="390" height="72" fill="#fef3c7"/>
+  <rect x="1130" y="565" width="130" height="72" fill="#dcfce7"/>
+  <line x1="1195" y1="545" x2="1195" y2="657" stroke="#166534" stroke-width="4"/>
+  <text x="890" y="680" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="20" fill="#64748b">시작</text>
+  <text x="1195" y="680" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="20" font-weight="700" fill="#166534">가운데</text>
+  <text x="1500" y="680" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="20" fill="#64748b">끝</text>
+  <text x="955" y="610" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#991b1b">Bad</text>
+  <text x="1065" y="610" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#92400e">Great</text>
+  <text x="1195" y="610" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#166534">Perfect</text>
+  <text x="1325" y="610" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#92400e">Great</text>
+  <text x="1445" y="610" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#991b1b">Bad</text>
+
+  <rect x="920" y="710" width="555" height="38" rx="19" fill="#f1f5f9"/>
+  <text x="1198" y="736" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="19" fill="#475569">정답이 아닌 키, 미리 누른 키, 입력하지 않은 경우도 Bad로 처리</text>
+</svg>

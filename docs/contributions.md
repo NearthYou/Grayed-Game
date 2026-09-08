@@ -1,6 +1,6 @@
-# 구현 역할
+# 담당 범위
 
-Grayed Game은 기획, 개발, 아트와 사운드가 함께 만든 팀 프로젝트입니다. 2024 BIC Rookie 전시와 2024 LOGIN 기획 우수상을 받았습니다.
+Grayed Game은 기획, 프로그래밍, 아트와 사운드가 함께 만든 팀 프로젝트입니다. 전시와 수상, 전체 게임 설계와 완성된 작품은 팀의 결과입니다.
 
 ## 이시원
 
@@ -8,26 +8,38 @@ Grayed Game은 기획, 개발, 아트와 사운드가 함께 만든 팀 프로�
 | --- | --- |
 | 참여 기간 | 2024.10 - 2026.01 |
 | 역할 | 프로그래머 |
-| 주요 시스템 | CH2 SuperArio, CH3 grid와 editor, 건설과 생산, teleporter, Dancepace, dialogue와 interaction |
+| 담당 | 플랫포머, 탐험과 건설, 리듬 게임, 맵 제작 도구 |
 
-## 구현 내용
+## 플랫포머
 
-| 영역 | 주요 작업 |
-| --- | --- |
-| CH2 SuperArio | input, 이동, jump buffer, obstacle, stage, store, pipe, reward와 연출 |
-| CH3 base | player movement, grid, minimap, 자원과 object interaction |
-| Tile editor | placement, spawn point, block fill, 좌표 변환과 겹침 방지 |
-| Building | build mode, factory, 생산, crafting과 inventory |
-| Teleporter | region activation, list UI, fade와 distance close |
-| Dancepace | wave data, input timing, character, UI와 sound presentation |
-| Maintenance | reflection 제거, editor build 제외와 memory 정리 |
+- 캐릭터 이동, 점프, 피격과 무적 상태
+- 장애물 생성과 재사용, 스테이지 진행
+- 코인, 아이템 상자, 상점과 보상 공간
+- 오프닝, 화면 전환, 카메라와 사운드 연출
+- 마을과 미니게임 사이의 진행 상태 연결
 
-## SuperArio
+## 탐험과 건설
 
-횡스크롤 이동과 피격, obstacle spawn, coin과 item, 상점, pipe, stage와 reward 흐름을 구현했습니다. jump buffer와 input 교체, balancing과 연출까지 한 chapter 안에서 연결했습니다.
+- 게임 위치와 칸 좌표 변환
+- 건물과 자원의 겹침 방지
+- 자원 채집, 건물 배치와 생산
+- 제작, 가방과 빠른 선택 칸
+- 지역 이동, 미니맵과 상호작용 안내
 
-## Grid editor
+## 리듬 게임
 
-기획자의 map 수정이 프로그래머 재배치와 build를 거치던 흐름을 Unity EditorWindow로 바꿨습니다. 기획자가 scene에서 object를 편집하고 Play로 바로 확인할 수 있습니다.
+- 예시 동작, 연습, 본게임과 결과 화면
+- 비트 길이를 기준으로 한 입력 판정
+- 패턴과 판정 설정 데이터
+- 캐릭터, 관객, UI와 사운드 반응
+- 대화와 한영 문구 연결
 
-강제 Repaint와 반복 reflection을 제거하고 `GridSystem` reference와 occupied-cell cache를 사용해 Editor main thread frame time을 1084.8ms에서 52.7ms로 줄였습니다.
+## 맵 제작 도구
+
+- 클릭과 드래그 배치, 삭제
+- 시작 위치 지정과 빈 칸 채우기
+- 여러 칸을 차지하는 요소의 겹침 방지
+- 편집 화면과 실제 게임이 공유하는 맵 설정
+- 반복 탐색과 강제 화면 갱신 제거
+
+[문제 해결 기록](../README.md#문제-해결-기록) | [상세 구현](tooling.md)

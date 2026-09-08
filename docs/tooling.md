@@ -1,113 +1,79 @@
-# 제작 도구와 미니게임 구조
+# 제작 도구와 게임 로직
 
-## 기획자 편집 흐름
+README에서는 플레이와 문제 해결 흐름을 먼저 보여 줍니다. 이 문서에는 맵 제작 도구, 탐험과 건설, 플랫포머, 리듬 게임의 코드 구조를 조금 더 자세히 정리했습니다.
 
-초기에는 spreadsheet로 받은 map을 programmer가 Unity scene에 다시 배치했습니다. 작은 수정도 build를 거쳐야 했고 기획자는 결과를 바로 확인하기 어려웠습니다.
+## 맵 제작 도구
 
-`GridTileEditor`는 Scene View에서 object type을 고르고 click과 drag로 배치하거나 삭제하는 EditorWindow입니다. spawn point 지정, block fill과 occupied cell 확인도 같은 window에서 처리합니다.
+기획자가 스프레드시트로 좌표를 전달하고 프로그래머가 Unity 장면에 다시 배치하던 과정을 Unity 편집 화면 안으로 옮겼습니다.
 
-```mermaid
-flowchart LR
-    A[기획자 click과 drag] --> B[GridTileEditor]
-    B --> C[world와 grid 좌표 변환]
-    C --> D{occupied cell인가}
-    D -->|아니오| E[scene object 배치]
-    D -->|예| F[배치 취소]
-    E --> G[바로 Play로 확인]
-```
+![맵 수정 작업의 기존 흐름과 개선한 흐름](images/level-design-workflow.svg)
 
-## Editor 성능 정리
+![Unity에서 맵을 직접 배치하는 제작 도구](images/grid-tile-editor.png)
 
-첫 구현은 Scene View update 때마다 GridSystem을 다시 찾고 강제 Repaint와 배치 object scan을 반복했습니다.
+편집 창에서 배치할 요소를 고른 뒤 장면을 클릭하거나 드래그해 맵을 만듭니다. 삭제, 시작 위치 지정, 빈 칸 채우기와 겹침 확인도 같은 창에서 처리합니다.
 
-현재 source는 GridSystem reference와 grid property를 직접 사용하고, 강제 Repaint를 제거했습니다. occupied position은 `HashSet<Vector2Int>`로 구성해 겹침을 검사합니다.
+### 편집 결과가 실제 게임과 달라지지 않게
 
-같은 장비와 scene에서 Editor main thread frame time을 1084.8ms에서 52.7ms로 줄였습니다.
+편집 화면과 실제 게임이 같은 맵 설정 데이터를 읽습니다. 각 요소의 크기, 이미지, 충돌 범위, 통과 가능 여부와 차지하는 칸을 한곳에서 관리합니다.
 
-## 데이터 계약
+편집할 때는 제작 도구가 이 설정으로 장면에 요소를 놓고, 플레이 중에는 생성 코드가 같은 설정으로 건물과 오브젝트를 만듭니다. 생성 시점은 달라도 배치 규칙은 같습니다.
 
-| 책임 | 구현 |
-| --- | --- |
-| object type과 footprint | `CH3_LevelData` |
-| CSV와 ScriptableObject 연결 | `CH3_LevelDataCSVLoader`, Editor generator |
-| grid coordinate와 occupied cell | `GridSystem` |
-| editor 배치 | `GridTileEditor` |
-| runtime object 생성 | `BuildingObjectFactory` |
-| 건물과 생산 | `Structure`, `Producer`와 관련 data |
+[맵 제작 도구](../Assets/Scripts/Editor/GridTileEditor.cs) | [맵 설정 데이터](../Assets/Scripts/Runtime/CH3/Main/Data/CH3_LevelData.cs) | [플레이 중 건물 생성](../Assets/Scripts/Runtime/CH3/Main/Building/BuildingObjectFactory.cs)
 
-editor와 runtime이 같은 `CH3_LevelData`를 읽으므로 sprite, collision, footprint와 passability 기준을 한곳에서 바꿀 수 있습니다.
+### 편집 중 반복 작업 줄이기
 
-```mermaid
-classDiagram
-    class CH3_LevelData
-    class CH3_LevelDataCSVLoader
-    class CH3_LevelDataSOGenerator
-    class GridObjectDataManager
-    class GridTileEditor
-    class BuildingObjectFactory
-    class GridSystem
-    class GridObject
+처음에는 마우스가 움직일 때마다 장면에서 좌표 시스템을 다시 찾고, 배치된 요소 전체를 검사한 뒤 화면을 강제로 다시 그렸습니다. 맵이 커질수록 같은 작업이 입력마다 반복됐습니다.
 
-    CH3_LevelDataSOGenerator --> CH3_LevelDataCSVLoader : CSV 읽기
-    CH3_LevelDataCSVLoader --> CH3_LevelData : runtime data 생성
-    CH3_LevelDataSOGenerator --> CH3_LevelData : ScriptableObject 저장
-    GridObjectDataManager --> CH3_LevelData : editor cache
-    GridTileEditor --> GridObjectDataManager : object 생성
-    GridTileEditor --> GridSystem : 좌표와 spawn 갱신
-    BuildingObjectFactory --> CH3_LevelData : runtime 규칙 읽기
-    BuildingObjectFactory --> GridObject : type별 component 생성
-    GridObject --> GridSystem : occupied cell 등록
-```
+좌표 시스템은 한 번 찾은 참조를 사용하고, 배치된 칸은 빠르게 확인할 수 있는 집합으로 저장했습니다. 장면의 요소 수가 바뀐 경우에만 목록을 갱신하고 매 입력마다 실행하던 화면 갱신도 제거했습니다.
 
-Editor에서는 `GridObjectDataManager`, runtime에서는 `BuildingObjectFactory`가 같은 `CH3_LevelData`를 읽습니다. 둘은 object 생성 시점이 다르지만 footprint와 sprite, collision 기준을 공유합니다.
+## 탐험과 건설
 
-## runtime grid
+게임 속 위치를 칸 좌표로 바꾸고, 이미 사용 중인 칸에는 다른 건물이나 자원이 겹치지 않도록 관리합니다. 건물 크기가 여러 칸이어도 차지하는 모든 칸을 함께 등록하고 해제합니다.
 
-`GridSystem`은 world position과 grid position을 변환하고 occupied cell, spawn area와 object count를 관리합니다. building, ore, NPC와 teleporter는 grid object 계약을 통해 같은 field에 배치됩니다.
+건설 미리 보기, 실제 배치, 자원 생성과 맵 제작 도구가 같은 좌표 기준을 사용합니다. 자원 채집, 건물 생산, 제작과 가방 기능도 이 배치 상태를 기준으로 이어집니다.
 
-`BuildingObjectFactory`는 data type을 보고 runtime class를 선택합니다. editor object와 플레이어가 새로 만든 건물이 같은 footprint와 grid state를 사용합니다.
+[좌표와 배치 상태](../Assets/Scripts/Runtime/CH3/Main/Core/GridSystem.cs) | [건물 생성](../Assets/Scripts/Runtime/CH3/Main/Building/BuildingObjectFactory.cs)
 
-## CH2 SuperArio 플랫포머
+## 플랫포머
 
-```mermaid
-classDiagram
-    class ArioManager
-    class Ario
-    class Mario
-    class ObstacleManager
-    class ObstacleBase
-    class EnterPipe
-    class ArioStore
-    class ItemBox
-    class ExitPipe
+![플랫포머 화면 전환과 리듬 입력 판정 구조](images/gameplay-logic.svg)
 
-    ArioManager o-- Ario : player state
-    ArioManager o-- Mario : partner state
-    ArioManager o-- ObstacleManager : stage spawn
-    ObstacleManager --> ObstacleBase : pool과 이동
-    Ario --> ArioManager : life, coin과 item event
-    Mario --> ObstacleBase : jump 또는 sit 판단
-    EnterPipe --> ArioManager : store 전환
-    ArioStore --> ItemBox : 구매와 사용
-    ExitPipe --> ArioStore : stage 복귀
-```
+### 스테이지, 상점과 보상 공간
 
-`ArioManager`는 stage, play, pause, store, reward와 game-over state를 조율합니다. `Ario`와 `Mario`는 이동과 충돌 반응을 맡고, `ObstacleManager`는 pool을 재사용해 stage data에 맞는 obstacle을 흘려보냅니다.
+플랫포머는 오프닝, 스테이지, 상점, 보상 공간과 마을 복귀로 이어집니다. 이 흐름을 관리하는 코드가 현재 상태를 바꾸면서 입력, 카메라, 화면 비율, UI와 BGM을 함께 갱신합니다.
 
-상점은 `EnterPipe`에서 별도 camera와 `ArioStore` state로 전환됩니다. `ItemBox`는 coin 조건과 사용 결과를 나누며 `ExitPipe`가 main stage 복귀를 요청합니다. 실제 구현은 `Assets/Scripts/Runtime/CH2/SuperArio`에서 확인할 수 있습니다.
+상점에 들어갈 때는 무적 상태를 끝내고 플레이 입력을 막습니다. 상점에서 돌아올 때는 남은 체력을 유지한 채 스테이지를 다시 시작하고, 보상 공간을 나갈 때는 완료한 스테이지를 저장합니다.
 
-## teleporter
+[플랫포머 진행 상태](../Assets/Scripts/Runtime/CH2/SuperArio/ArioManager.cs) | [상점 진입](../Assets/Scripts/Runtime/CH2/SuperArio/EnterPipe.cs)
 
-`TeleporterManager`는 BaseCamp, Michael, Farmer, Dollar region과 activation state를 관리합니다. BaseCamp는 처음부터 active이고 현재 위치를 뺀 active region만 정해진 순서로 보여줍니다.
+### 장애물 재사용
 
-player가 tower와 interaction하면 `TeleportUI`가 region button을 표시합니다. 2m interaction range를 벗어나면 0.1초 간격 distance check가 UI를 닫습니다.
+스테이지가 시작되면 필요한 장애물을 미리 만들고, 화면 밖으로 나간 장애물은 끈 뒤 다음 순서에서 다시 사용합니다. 진행 중에 같은 장애물을 계속 만들고 없애지 않습니다.
 
-이동 중에는 interaction을 막고 fade out, position change, fade in 뒤 0.1초 delay를 거쳐 state를 reset합니다. 현재 source에는 별도의 3초 cooldown과 UI close distance field가 없습니다.
+[장애물 생성과 재사용](../Assets/Scripts/Runtime/CH2/SuperArio/ObstacleManager.cs)
 
-scene setup은 code 옆의 [teleporter guide](../Assets/Scripts/Runtime/CH3/Main/World/README_TeleportSystem.md)를 따릅니다.
+### 점프 입력과 이동 계산
 
-## Dancepace data와 flow
+점프 입력은 입력 콜백에서 받고 실제 이동은 고정된 물리 갱신 단계에서 처리합니다. 입력 콜백은 점프 요청을 0.2초 동안 저장하고, 물리 갱신 단계가 바닥 상태를 확인한 뒤 요청을 실행합니다.
 
-`WaveDataSO`와 `GameConfigSO`가 wave, timing과 게임 규칙을 보관합니다. `GameFlowManager`, `DPTimeline`, UI와 character class가 rehearsal, play와 result state를 나눠 처리합니다.
+[캐릭터 이동과 점프](../Assets/Scripts/Runtime/CH2/SuperArio/Ario.cs)
 
-string comparison을 줄이고 enum과 string table을 사용해 input, text와 result를 연결합니다. source와 resource 경계는 프로젝트 history의 Dancepace commit에서 확인할 수 있습니다.
+## 리듬 게임
+
+초기 판정은 정답 시점에서 몇 초 차이인지를 봤습니다. 비트 길이가 달라지면 같은 시간 차이의 의미도 달라져, 입력 시간을 비트 길이로 나눈 비율을 기준으로 바꿨습니다.
+
+한 비트를 0부터 1까지로 놓고 가운데를 기준으로 Perfect, Great, Bad 범위를 나눕니다. 정답이 아닌 키, 미리 누르고 있던 키와 입력하지 않은 경우도 같은 흐름에서 Bad로 처리합니다.
+
+### 패턴과 판정 설정
+
+패턴 데이터에는 정답 자세, 비트 길이와 쉬는 시간이 들어갑니다. 판정 범위와 보상은 별도 설정에 두어 새로운 패턴을 추가할 때 판정 코드를 다시 고치지 않게 했습니다.
+
+연습에서는 예시 동작을 먼저 보여 주고, 본게임에서는 제한 시간 동안 여러 패턴을 진행합니다. 입력 결과는 캐릭터와 관객의 반응, 점수, 효과와 결과 화면으로 이어집니다.
+
+[게임 진행과 판정](../Assets/Scripts/Runtime/CH3/Dancepace/Managers/GameFlowManager.cs) | [패턴 데이터](../Assets/Scripts/Runtime/CH3/Dancepace/Data/WaveDataSO.cs) | [판정 설정](../Assets/Scripts/Runtime/CH3/Dancepace/Data/GameConfigSO.cs)
+
+## 지역 이동
+
+활성화된 지역만 이동 목록에 표시하고 현재 위치는 목록에서 뺍니다. 이동 중에는 다른 상호작용을 막고 화면을 가린 뒤 위치를 옮겨 장면 전환이 보이지 않게 처리합니다.
+
+[지역 이동 설정](../Assets/Scripts/Runtime/CH3/Main/World/README_TeleportSystem.md)

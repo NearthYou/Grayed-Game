@@ -1,53 +1,37 @@
-# Grayed Game 설계
+# 게임 설계
 
-## 핵심 경험
+## 배경
 
-Grayed Game은 잊힌 게임이 떨어지는 회색 마을을 탐험하는 PC 2D adventure입니다. 주인공 라플리는 다른 게임의 규칙과 UI를 가져와 마을의 문제를 풀고, 플레이어는 chapter마다 달라지는 조작과 장르를 경험합니다.
+기억에서 사라진 게임들이 회색 마을로 떨어집니다. 시간이 지나면 게임의 색과 형태도 흐려집니다. 플레이어가 조작하는 라플리는 아직 누군가에게 기억되고 있어 마을에서 사라지지 않은 인물입니다.
 
-핵심은 여러 mini game을 단순히 나열하는 데 있지 않습니다. 한 chapter의 main field에서 다른 게임의 규칙으로 접속했다가 다시 돌아오는 흐름이 세계관과 progression 안에 연결돼야 합니다.
+라플리는 주민과 대화하고 마을에서 일어난 사건을 따라갑니다. 사건마다 다른 게임의 규칙으로 들어가 문제를 해결한 뒤 다시 마을로 돌아옵니다.
 
-## 메타픽션 세계관
+## 플레이 흐름
 
-마을에는 기억에서 사라진 game과 resource가 떨어집니다. 시간이 지나면 색과 형태를 잃는다는 설정이 회색 화면과 장르 전환의 시각적 근거가 됩니다.
+![마을 탐험과 미니게임이 이어지는 플레이 구조](images/game-flow.svg)
 
-라플리는 현재 플레이어가 조작하고 있어 완전히 잊히지 않은 game입니다. 이 차이를 이용해 마을의 주민, 사라지는 resource와 각 chapter의 규칙을 연결합니다.
+마을 탐험이 중심이고 플랫포머, 자원 수집과 건설, 리듬 게임이 사건에 따라 열립니다. 각 미니게임은 조작과 화면이 다르지만 완료 결과는 다시 마을의 진행 상태로 이어집니다.
 
-2024년 작업 초안의 미완성 5개 chapter, placeholder story와 GameOver 가제는 현재 설계로 사용하지 않습니다. 이 문서는 실제 README와 구현된 CH3, Dancepace 범위만 설명합니다.
+## 플랫포머
 
-## 장르 결합 구조
+자동으로 이동하는 캐릭터가 점프와 앉기로 장애물을 피합니다. 스테이지에서 코인을 모아 상점에서 아이템을 사고, 정해진 구간을 통과하면 보상 공간을 거쳐 마을로 돌아옵니다.
 
-main chapter는 탐험, 대화와 interaction을 담당합니다. 접속 콘텐츠는 다른 조작과 화면 규칙을 가진 mini game으로 구성합니다.
+오프닝, 스테이지, 상점과 보상 공간은 한 장면 안에서 카메라와 화면 비율을 바꾸며 이어집니다. 상세한 상태 전환은 [제작 도구와 게임 로직](tooling.md#스테이지-상점과-보상-공간)에 정리했습니다.
 
-현재 저장소에서 확인되는 대표 범위는 다음과 같습니다.
+## 탐험과 건설
 
-- top-down exploration과 NPC interaction
-- CH3 grid field, building, production과 resource collection
-- Dancepace 리듬 미니게임
-- Yarn Spinner dialogue와 event trigger
-- 지역을 연결하는 teleporter 시스템
+플레이어는 마을을 돌아다니며 자원을 모으고 건물을 배치합니다. 건물은 여러 칸을 차지할 수 있으며 이미 사용 중인 칸에는 다른 건물이나 자원이 겹치지 않습니다.
 
-## CH3 건설과 자원 흐름
+자원 채집, 건물 생산, 제작과 가방이 한 흐름으로 이어집니다. 지역을 열면 이동 목록에서 목적지를 골라 빠르게 이동할 수 있습니다.
 
-CH3 main field는 2.5D grid를 사용합니다. `CH3_LevelData`가 object type, footprint, sprite와 collision 정보를 정의하고 `GridSystem`이 occupied cell, movement와 spawn state를 관리합니다.
+## 리듬 게임
 
-editor에서 배치한 object와 Play 중 `BuildingObjectFactory`가 만드는 건물은 같은 데이터 계약을 사용합니다. 기획자가 배치한 필드와 runtime 건물이 다른 규칙으로 움직이는 문제를 줄이기 위한 구조입니다.
+무대 위 인물이 보여 주는 자세를 기억한 뒤 WASD로 같은 자세를 입력합니다. 연습에서는 한 동작씩 익히고, 본게임에서는 제한 시간 동안 이어지는 패턴을 맞춥니다.
 
-플레이어는 자원을 수집해 건물을 만들고 생산 item을 얻습니다. inventory, hotbar, tooltip과 sound feedback은 이 loop를 화면에 연결합니다.
+입력 시점은 비트 길이에 대한 비율로 계산해 Perfect, Great, Bad로 나눕니다. 결과에 따라 캐릭터와 관객의 반응, 효과와 점수가 함께 바뀝니다.
 
-## Dancepace 리듬 미니게임
+## 대화와 진행
 
-Dancepace는 key input, wave progression, time limit와 result panel을 가진 rhythm mini game입니다.
+주민 대화는 사건의 시작과 미니게임 진입, 완료 뒤 마을 복귀를 연결합니다. 한영 문구와 대화 분기는 게임 진행 상태에 따라 달라집니다.
 
-wave와 게임 설정은 ScriptableObject에 두고 string table과 연결합니다. rehearsal, answer character, audience effect와 sound는 game flow state에 따라 나뉩니다.
-
-input 판정과 presentation을 한 class에 몰지 않고 manager, data, character, effect와 UI 단위로 나눈 것이 현재 source의 경계입니다.
-
-## 현재 구현 범위
-
-- Unity 2022.3.62f2 기반 PC 프로젝트
-- chapter별로 다른 장르와 system을 결합하는 구조
-- CH3 필드 editor와 runtime grid
-- building, production, resource, inventory와 hotbar
-- teleporter activation, region list와 fade transition
-- Dancepace data, input judgment와 presentation
-- dialogue, NPC interaction과 event area
+[플레이 영상](https://www.youtube.com/watch?v=fdvunwIGKAs) | [담당 범위](contributions.md) | [코드와 자료](verification.md)
