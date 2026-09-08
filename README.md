@@ -2,13 +2,11 @@
 
 회색 마을을 탐험하며 플랫포머, 리듬 게임, 자원 수집과 건설을 경험하는 PC용 2D 어드벤처 게임입니다.
 
-![Grayed Game 컷신](https://github.com/user-attachments/assets/c66db4e4-e75d-4350-8168-768db4800578)
+[![Grayed Game 플레이 영상](docs/images/game-cover.jpg)](https://www.youtube.com/watch?v=fdvunwIGKAs)
 
 [플레이 영상](https://www.youtube.com/watch?v=fdvunwIGKAs) | [실행 파일](https://drive.google.com/file/d/1NscghxWgvjWWtu2stNFduW3cMFrBb4fl/view?usp=sharing)
 
-[![Grayed Game 실제 플레이 영상](https://img.youtube.com/vi/fdvunwIGKAs/hqdefault.jpg)](https://www.youtube.com/watch?v=fdvunwIGKAs)
-
-[게임 설계](docs/game-design.md) | [상세 구현](docs/tooling.md) | [담당 범위](docs/contributions.md) | [검증 기록](docs/verification.md)
+[게임 설계](docs/game-design.md) | [상세 구현](docs/tooling.md) | [담당 범위](docs/contributions.md) | [코드와 자료](docs/verification.md)
 
 ## 프로젝트 소개
 
@@ -25,9 +23,15 @@
 
 기본 탐험 화면에서 다른 장르의 미니게임으로 들어갔다가 다시 마을로 돌아오는 구조입니다. 플랫포머, 리듬 게임, 자원 수집과 건설이 하나의 이야기 안에서 이어집니다.
 
+### 플레이 구조
+
+![마을 탐험과 미니게임이 이어지는 플레이 구조](docs/images/game-flow.svg)
+
 | 리듬 미니게임 | 탐험과 건설 |
 | --- | --- |
-| ![리듬 미니게임 플레이](docs/images/gameplay-dancepace.jpg) | ![탐험과 건설 플레이](docs/images/gameplay-ch3-build.jpg) |
+| [![리듬 미니게임 플레이](docs/images/gameplay-dancepace.jpg)](https://youtu.be/fdvunwIGKAs?t=119) | [![탐험과 건설 플레이](docs/images/gameplay-ch3-build.jpg)](https://youtu.be/fdvunwIGKAs?t=44) |
+
+[플랫포머 플레이 구간](https://youtu.be/fdvunwIGKAs?t=84)
 
 ### 팀 결과
 
@@ -71,7 +75,7 @@
 
 ### 플랫포머 미니게임
 
-이동과 점프부터 시작해 피격, 코인, 장애물, 스테이지 전환, 상점과 보상까지 한 판의 흐름을 연결했습니다. 스테이지를 시작할 때 장애물을 미리 만들고 진행 중에는 필요한 장애물만 활성화해 재사용합니다.
+이동과 점프부터 시작해 피격, 코인, 장애물, 스테이지 전환, 상점과 보상이 한 판 안에서 이어지도록 구현했습니다. 스테이지를 시작할 때 장애물을 미리 만들고 진행 중에는 필요한 장애물만 활성화해 재사용합니다.
 
 [캐릭터 이동과 상태](Assets/Scripts/Runtime/CH2/SuperArio/Ario.cs) | [장애물 생성과 재사용](Assets/Scripts/Runtime/CH2/SuperArio/ObstacleManager.cs)
 
@@ -95,19 +99,71 @@
 
 ## 문제 해결 기록
 
-### 맵 수정이 프로그래머를 거쳐야 했던 문제
+### 맵 수정이 코드 병합을 기다리던 문제
 
-처음에는 기획자가 스프레드시트로 맵 수정을 전달하면 프로그래머가 Unity 장면에 다시 배치했습니다. 작은 수정도 전달, 재배치와 실행 파일 확인을 반복해야 했습니다.
+#### 문제 상황
 
-기획자가 Unity 편집 화면에서 직접 배치한 뒤 재생 버튼을 눌러 확인하도록 제작 도구를 만들었습니다. 편집 도구와 실제 게임이 같은 설정 데이터를 읽게 해 크기, 이미지와 충돌 범위가 실행 중에도 그대로 적용되도록 했습니다.
+처음에는 기획자가 스프레드시트로 좌표를 전달하면 프로그래머가 Unity 장면에 다시 배치했습니다. 맵을 조금만 바꿔도 전달, 재배치, 실행 파일 확인을 반복해야 했고 맵 제작 도구가 병합되기 전까지 다음 레벨 디자인 작업도 멈춰 있었습니다.
 
-마우스를 움직일 때마다 배치된 요소 전체를 검사하고 화면을 강제로 다시 그리는 작업도 반복되고 있었습니다. 배치된 칸을 저장해 요소 수가 달라졌을 때만 갱신하고 매 입력마다 실행하던 강제 화면 갱신을 제거했습니다.
+#### 선택한 방법
 
-### 점프 입력과 이동 계산의 시점 분리
+좌표 변환만 자동화해서는 전달 과정이 그대로 남습니다. 기획자가 Unity 편집 화면에서 직접 배치하고 같은 장면을 바로 재생해 확인할 수 있도록 했습니다.
 
-점프 입력은 입력 콜백에서 받고 캐릭터 이동은 고정된 물리 갱신 단계에서 계산합니다. 점프 요청을 0.2초 동안 저장하고 물리 갱신 단계에서 실행하도록 두 흐름을 나눴습니다.
+클릭과 드래그 배치, 삭제, 시작 위치 지정, 빈 칸 채우기와 겹침 확인을 한 창에 넣었습니다. 편집 화면과 실제 게임이 같은 설정 데이터를 읽게 해 크기, 이미지, 충돌 범위와 차지하는 칸도 한곳에서 관리했습니다.
 
-[점프 입력 처리](Assets/Scripts/Runtime/CH2/SuperArio/Ario.cs) | [제작 도구 상세 설명](docs/tooling.md)
+![맵 수정 작업의 기존 흐름과 개선한 흐름](docs/images/level-design-workflow.svg)
+
+#### 편집 화면
+
+![Unity에서 맵을 직접 배치하는 제작 도구](docs/images/grid-tile-editor.png)
+
+장면에 배치한 요소가 늘자 마우스를 움직일 때마다 전체를 다시 찾고 화면을 강제로 그리는 작업이 반복됐습니다. 배치된 칸을 저장하고 요소 수가 달라졌을 때만 갱신하도록 바꿔 편집 중 반복되던 탐색과 화면 갱신을 줄였습니다.
+
+#### 결과
+
+기획자는 별도의 실행 파일을 기다리지 않고 배치와 플레이 확인을 반복할 수 있게 됐습니다. 편집 화면과 실제 게임의 배치 기준도 같은 데이터에서 가져오므로 한쪽만 수정해 결과가 달라지는 문제를 줄였습니다.
+
+[맵 제작 도구 코드](Assets/Scripts/Editor/GridTileEditor.cs) | [맵 설정 데이터](Assets/Scripts/Runtime/CH3/Main/Data/CH3_LevelData.cs) | [좌표와 배치 상태 관리](Assets/Scripts/Runtime/CH3/Main/Core/GridSystem.cs)
+
+### 플랫포머 화면을 오갈 때 상태가 남던 문제
+
+#### 문제 상황
+
+플랫포머 안에는 스테이지뿐 아니라 상점과 보상 공간도 있습니다. 각 화면이 카메라, 입력, UI와 소리를 따로 바꾸면서 상점에 들어간 뒤 무적 상태가 남거나, 상점에서 나왔을 때 체력이 다시 초기화되는 문제가 생겼습니다.
+
+#### 선택한 방법
+
+화면마다 필요한 값을 제각각 바꾸지 않고 현재 진행 상태를 한곳에서 관리했습니다. 스테이지, 상점, 보상 공간으로 전환할 때 입력 가능 여부, 카메라 우선순위, 화면 비율, UI와 BGM을 함께 갱신했습니다.
+
+상점에 들어갈 때는 무적 상태를 끝내고, 상점에서 돌아올 때는 남은 체력을 유지합니다. 보상 공간을 나갈 때는 완료한 스테이지를 저장한 뒤 마을로 복귀하도록 전환마다 초기화할 값과 이어갈 값을 나눴습니다.
+
+![플랫포머 상태 전환과 리듬 입력 판정 구조](docs/images/gameplay-logic.svg)
+
+#### 결과
+
+스테이지, 상점, 보상 공간을 오가더라도 이전 화면의 상태가 다음 화면에 남지 않게 됐습니다. 화면 전환과 함께 처리해야 할 항목도 한 흐름에서 확인할 수 있습니다.
+
+[플랫포머 진행 상태](Assets/Scripts/Runtime/CH2/SuperArio/ArioManager.cs) | [상점 진입 처리](Assets/Scripts/Runtime/CH2/SuperArio/EnterPipe.cs) | [플랫포머 플레이 구간](https://youtu.be/fdvunwIGKAs?t=84)
+
+### 비트 길이에 따라 리듬 판정이 달라지던 문제
+
+#### 문제 상황
+
+초기 판정은 정답 시점에서 몇 초 차이인지를 보는 방식이었습니다. 같은 시간 차이라도 짧은 비트에서는 크게 늦은 입력이 되고 긴 비트에서는 작은 차이가 되기 때문에, 패턴의 박자 길이가 바뀌면 판정 감각도 함께 달라졌습니다.
+
+#### 선택한 방법
+
+입력 시간을 비트 길이로 나눠 한 비트를 0부터 1까지의 비율로 바꿨습니다. 가운데를 정답 시점으로 두고 가까운 입력은 Perfect, 그다음 범위는 Great, 나머지는 Bad로 판정합니다.
+
+정답 자세와 비트 길이, 쉬는 시간은 패턴 데이터로 분리했습니다. 정답이 아닌 키를 누르거나 비트 시작 전에 키를 누르고 있거나, 끝까지 입력하지 않은 경우도 같은 판정 흐름에서 처리합니다.
+
+#### 결과
+
+길이가 다른 비트도 같은 비율을 기준으로 판정할 수 있게 됐습니다. 패턴과 판정 범위도 데이터에서 바꿀 수 있어 새로운 웨이브를 추가할 때 판정 코드를 다시 수정할 필요가 없습니다.
+
+[리듬 게임 진행과 판정](Assets/Scripts/Runtime/CH3/Dancepace/Managers/GameFlowManager.cs) | [패턴 데이터](Assets/Scripts/Runtime/CH3/Dancepace/Data/WaveDataSO.cs) | [판정 설정](Assets/Scripts/Runtime/CH3/Dancepace/Data/GameConfigSO.cs)
+
+[리듬 게임 플레이 구간](https://youtu.be/fdvunwIGKAs?t=119)
 
 ## 팀
 

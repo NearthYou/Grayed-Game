@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720" role="img" aria-labelledby="title desc">
+  <title id="title">Grayed Game 플레이 구조</title>
+  <desc id="desc">회색 마을을 탐험하다가 플랫포머, 탐험과 건설, 리듬 게임을 플레이하고 진행 결과를 마을에 반영하는 흐름</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#64748b"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="720" rx="36" fill="#f8fafc"/>
+  <text x="70" y="78" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="38" font-weight="700" fill="#0f172a">한 마을에서 서로 다른 게임으로 이어집니다</text>
+  <text x="70" y="120" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="24" fill="#64748b">탐험 중 사건을 만나면 해당 규칙의 게임으로 들어가고, 결과는 다시 마을 진행에 반영됩니다.</text>
+
+  <rect x="70" y="205" width="310" height="320" rx="28" fill="#111827" filter="url(#shadow)"/>
+  <text x="225" y="285" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="34" font-weight="700" fill="#ffffff">회색 마을 탐험</text>
+  <line x1="120" y1="320" x2="330" y2="320" stroke="#475569" stroke-width="2"/>
+  <text x="225" y="375" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" fill="#e2e8f0">주민과 대화</text>
+  <text x="225" y="420" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" fill="#e2e8f0">사건 발견</text>
+  <text x="225" y="465" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" fill="#e2e8f0">지역 이동</text>
+
+  <path d="M380 365 H450 M450 235 V545" stroke="#64748b" stroke-width="5" fill="none"/>
+  <path d="M450 235 H470" stroke="#64748b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M450 390 H470" stroke="#64748b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M450 545 H470" stroke="#64748b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="500" y="170" width="420" height="130" rx="24" fill="#fff7ed" stroke="#fb923c" stroke-width="3" filter="url(#shadow)"/>
+  <circle cx="555" cy="235" r="27" fill="#f97316"/>
+  <text x="555" y="245" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="28" font-weight="700" fill="#ffffff">1</text>
+  <text x="605" y="225" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="30" font-weight="700" fill="#9a3412">플랫포머</text>
+  <text x="605" y="267" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="23" fill="#7c2d12">장애물 통과, 상점, 보상</text>
+
+  <rect x="500" y="325" width="420" height="130" rx="24" fill="#eff6ff" stroke="#60a5fa" stroke-width="3" filter="url(#shadow)"/>
+  <circle cx="555" cy="390" r="27" fill="#2563eb"/>
+  <text x="555" y="400" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="28" font-weight="700" fill="#ffffff">2</text>
+  <text x="605" y="380" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="30" font-weight="700" fill="#1e3a8a">탐험과 건설</text>
+  <text x="605" y="422" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="23" fill="#1e40af">자원 채집, 배치, 생산</text>
+
+  <rect x="500" y="480" width="420" height="130" rx="24" fill="#f5f3ff" stroke="#a78bfa" stroke-width="3" filter="url(#shadow)"/>
+  <circle cx="555" cy="545" r="27" fill="#7c3aed"/>
+  <text x="555" y="555" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="28" font-weight="700" fill="#ffffff">3</text>
+  <text x="605" y="535" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="30" font-weight="700" fill="#4c1d95">리듬 게임</text>
+  <text x="605" y="577" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="23" fill="#5b21b6">동작 확인, 입력 판정, 결과</text>
+
+  <path d="M920 235 H1030" stroke="#64748b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M920 390 H1030" stroke="#64748b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M920 545 H1030" stroke="#64748b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="1060" y="245" width="470" height="280" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="3" filter="url(#shadow)"/>
+  <text x="1295" y="325" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="34" font-weight="700" fill="#0f172a">마을로 복귀</text>
+  <line x1="1130" y1="360" x2="1460" y2="360" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="1295" y="415" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" fill="#334155">보상과 진행 상태 반영</text>
+  <text x="1295" y="462" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="25" fill="#334155">다음 사건으로 연결</text>
+
+  <path d="M1295 525 V655 H225 V545" stroke="#64748b" stroke-width="4" stroke-dasharray="12 10" fill="none" marker-end="url(#arrow)"/>
+  <text x="760" y="688" text-anchor="middle" font-family="Pretendard, Noto Sans KR, Segoe UI, sans-serif" font-size="22" fill="#64748b">탐험과 미니게임을 오가며 이야기가 진행됩니다</text>
+</svg>
