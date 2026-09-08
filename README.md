@@ -1,16 +1,16 @@
 # Grayed Game
 
-잊힌 게임이 떨어지는 회색 마을에서 챕터마다 다른 장르와 시스템을 만나는 PC 2D 메타픽션 어드벤처입니다.
+회색 마을을 탐험하며 플랫포머, 리듬 게임, 자원 수집과 건설을 경험하는 PC용 2D 어드벤처 게임입니다.
 
-![Grayed Game cutscene](https://github.com/user-attachments/assets/c66db4e4-e75d-4350-8168-768db4800578)
+![Grayed Game 컷신](https://github.com/user-attachments/assets/c66db4e4-e75d-4350-8168-768db4800578)
 
-[플레이 영상](https://www.youtube.com/watch?v=fdvunwIGKAs) | [공개 build](https://drive.google.com/file/d/1NscghxWgvjWWtu2stNFduW3cMFrBb4fl/view?usp=sharing)
+[플레이 영상](https://www.youtube.com/watch?v=fdvunwIGKAs) | [실행 파일](https://drive.google.com/file/d/1NscghxWgvjWWtu2stNFduW3cMFrBb4fl/view?usp=sharing)
 
 [![Grayed Game 실제 플레이 영상](https://img.youtube.com/vi/fdvunwIGKAs/hqdefault.jpg)](https://www.youtube.com/watch?v=fdvunwIGKAs)
 
-[게임 설계](docs/game-design.md) | [제작 도구](docs/tooling.md) | [개인 기여](docs/contributions.md) | [검증](docs/verification.md)
+[게임 설계](docs/game-design.md) | [상세 구현](docs/tooling.md) | [담당 범위](docs/contributions.md) | [검증 기록](docs/verification.md)
 
-## 프로젝트 개요
+## 프로젝트 소개
 
 | 항목 | 내용 |
 | --- | --- |
@@ -18,92 +18,96 @@
 | 엔진 | Unity 2022.3.62f2 |
 | 장르 | 2D 어드벤처, 미니게임, 메타픽션 |
 | 개발 기간 | 2023.09 - 2026.01 |
-| 협업 | 기획, 개발, 아트, 사운드 팀 프로젝트 |
-| 개인 역할 | 게임플레이 프로그래머, CH2 SuperArio, CH3 시스템, 에디터 도구, Dancepace와 상호작용 |
+| 팀 구성 | 기획, 프로그래밍, 아트, 사운드 |
+| 담당 | 플랫포머, 탐험과 건설, 리듬 게임, 맵 제작 도구 |
 
-Grayed Game은 잊힌 게임이 모이는 마을에서 라플리가 여러 게임의 규칙을 사용해 사건을 해결하는 이야기입니다. top-down 탐험을 중심에 두고 리듬, 플랫폼, TRPG, 자원 수집과 건설 규칙을 접속 콘텐츠로 연결합니다.
+기억에서 사라진 게임들이 모이는 마을이 배경입니다. 플레이어는 마을을 돌아다니며 주민과 대화하고, 각 장에서 서로 다른 게임의 규칙을 이용해 사건을 해결합니다.
 
-| Dancepace 리듬 미니게임 | CH3 건설과 자원 시스템 |
+기본 탐험 화면에서 다른 장르의 미니게임으로 들어갔다가 다시 마을로 돌아오는 구조입니다. 플랫포머, 리듬 게임, 자원 수집과 건설이 하나의 이야기 안에서 이어집니다.
+
+| 리듬 미니게임 | 탐험과 건설 |
 | --- | --- |
-| ![Dancepace 플레이](docs/images/gameplay-dancepace.jpg) | ![CH3 building 플레이](docs/images/gameplay-ch3-build.jpg) |
+| ![리듬 미니게임 플레이](docs/images/gameplay-dancepace.jpg) | ![탐험과 건설 플레이](docs/images/gameplay-ch3-build.jpg) |
 
-장르가 바뀌는 흐름과 각 시스템의 실제 동작은 플레이 영상에서 확인할 수 있습니다.
-
-## 팀 결과
+### 팀 결과
 
 - 2024 BIC Rookie 부문 온오프라인 전시
 - 2024 LOGIN 대학생 연합 발표회 기획 우수상
-- 여러 장르의 플레이를 하나의 실행 가능한 빌드로 통합
+- 여러 장르의 플레이를 하나의 실행 파일로 통합
 
-전시와 수상, 전체 게임 설계, 아트와 사운드는 팀 결과입니다.
+전시와 수상, 전체 게임 설계, 아트와 사운드는 팀이 함께 만든 결과입니다.
 
-## 개인 기여
+## 실행 방법
 
-이시원은 2024년 10월부터 2026년 1월까지 프로그래머 2명 체제에서 CH2 SuperArio 플랫포머, CH3와 Dancepace를 중심으로 작업했습니다.
+1. 저장소를 내려받아 Unity Hub에 프로젝트를 추가합니다.
+2. Unity 2022.3.62f2로 열고 패키지 설치가 끝날 때까지 기다립니다.
+3. `Assets/Scenes/Title.unity`를 열고 재생 버튼을 누릅니다.
 
-| 영역 | 구현 범위 |
+설치 없이 플레이하려면 위의 실행 파일을 내려받으면 됩니다.
+
+## 주요 기능
+
+- 마을 탐험, 주민 대화와 사건 진행
+- 장애물을 피하고 보상을 모아 상점과 다음 구간으로 이어지는 플랫포머 미니게임 `SuperArio`
+- 자원 채집, 건물 배치, 생산, 제작과 가방 관리
+- 제시된 자세를 박자에 맞춰 입력하는 리듬 미니게임 `Dancepace`
+- 지역을 열어 빠르게 이동하고 미니맵과 안내 표시로 상호작용 대상을 확인
+- 기획자가 Unity 편집 화면에서 맵을 직접 배치하고 곧바로 플레이를 확인하는 제작 도구
+
+2024년 10월부터 2026년 1월까지 프로그래머로 참여해 플랫포머, 탐험과 건설, 리듬 게임, 맵 제작 도구를 맡았습니다. 세부 범위는 [담당 범위 문서](docs/contributions.md)에 정리했습니다.
+
+## 사용 기술
+
+| 기술 | 사용한 곳 |
 | --- | --- |
-| CH2 SuperArio | player 이동과 jump buffer, obstacle pool과 stage, item box, 상점, pipe 전환과 reward room |
-| CH3 grid | world와 grid 좌표, occupied cell, spawn과 object state |
-| Tile editor | type 선택, click과 drag 배치, spawn point, block fill과 겹침 방지 |
-| Building | build mode, preview, factory, production, crafting과 inventory |
-| Teleporter | 지역 활성화, list UI, fade 전환과 거리 기반 닫기 |
-| Dancepace | wave data, input timing, character, UI, 관객과 sound 연출 |
-| Interaction | Yarn dialogue, NPC, event area와 shop text 연결 |
-| Maintenance | reflection 제거, editor build 제외, 사용하지 않는 field와 memory risk 정리 |
+| Unity, C# | 게임플레이, UI와 제작 도구 |
+| Unity Input System | 이동, 상호작용과 리듬 입력 |
+| ScriptableObject, CSV | 맵 요소, 스테이지와 리듬 패턴 데이터 관리 |
+| URP 2D, Cinemachine, DOTween | 카메라, 화면 전환과 효과 |
+| Yarn Spinner, Unity Localization | 대화와 한영 문구 관리 |
+| Unity EditorWindow | 맵 배치와 게임 요소 설정 도구 |
 
-세부 구현 범위는 [개인 기여 문서](docs/contributions.md)에 정리했습니다.
+## 구현 과정
 
-### CH2 SuperArio 플랫포머 기여
+### 플랫포머 미니게임
 
-`Assets/Scripts/Runtime/CH2/SuperArio`에는 횡스크롤 이동과 피격, obstacle spawn, coin과 item, 상점, pipe, stage와 reward 흐름이 있습니다. `ArioManager`는 stage state를, player와 obstacle class는 각 동작을 맡습니다.
+이동과 점프부터 시작해 피격, 코인, 장애물, 스테이지 전환, 상점과 보상까지 한 판의 흐름을 연결했습니다. 스테이지를 시작할 때 장애물을 미리 만들고 진행 중에는 필요한 장애물만 활성화해 재사용합니다.
 
-input 교체, stage, 상점, jump buffer, 연출, balancing과 bug fix까지 SuperArio의 전체 플레이 흐름을 구현했습니다.
+[캐릭터 이동과 상태](Assets/Scripts/Runtime/CH2/SuperArio/Ario.cs) | [장애물 생성과 재사용](Assets/Scripts/Runtime/CH2/SuperArio/ObstacleManager.cs)
 
-## 문제 해결 과정
+### 탐험과 건설
 
-### 기획 변경을 바로 확인하는 Grid editor
+게임 속 위치를 칸 좌표로 바꾸고 이미 사용 중인 칸에는 건물이나 자원이 겹치지 않도록 관리했습니다. 자원 채집, 건물 배치, 생산, 제작과 가방 기능도 같은 좌표를 기준으로 동작하게 했습니다.
 
-기획자는 spreadsheet로 map 수정을 전달했고, 프로그래머가 Unity scene에 다시 배치했습니다. 작은 content 변경도 구현자와 build를 거쳐야 해서 기획자는 결과를 바로 확인하기 어려웠습니다.
+[좌표와 배치 상태 관리](Assets/Scripts/Runtime/CH3/Main/Core/GridSystem.cs) | [건물 생성](Assets/Scripts/Runtime/CH3/Main/Building/BuildingObjectFactory.cs)
 
-#### 반복 비용의 원인
+### 리듬 미니게임
 
-초기 editor는 Scene View update마다 `GridSystem` search와 reflection을 수행하고, 강제 Repaint와 배치 object scan을 반복했습니다. 편집 확인을 빠르게 하려던 흐름이 반복 탐색과 redraw 비용까지 함께 만들었습니다.
+자세와 입력 시점을 데이터로 분리해 패턴을 코드 수정 없이 바꿀 수 있게 했습니다. 연습, 본게임, 결과 화면으로 진행 단계를 나누고 입력 결과에 따라 캐릭터와 관객의 반응, 점수와 효과가 함께 바뀌도록 했습니다.
 
-#### 선택한 경계
+[리듬 패턴 데이터](Assets/Scripts/Runtime/CH3/Dancepace/Data/WaveDataSO.cs) | [게임 진행](Assets/Scripts/Runtime/CH3/Dancepace/Managers/GameFlowManager.cs)
 
-`GridTileEditor`에서 기획자가 Scene View로 object를 배치하거나 삭제하고, 같은 scene을 Play로 확인하도록 했습니다. object type, footprint, sprite, collision과 passability는 `CH3_LevelData`에 두어 editor와 runtime이 같은 규칙을 읽게 했습니다.
+### 맵 제작 도구
 
-editor는 `GridObjectDataManager`를 통해 배치하고, runtime은 `BuildingObjectFactory`가 같은 data를 읽어 object를 만듭니다. `GridSystem`은 world와 grid 좌표, occupied cell과 spawn을 관리합니다. 이 경계로 편집 시점과 실행 시점의 생성 책임은 나누되 object 규칙은 한곳에서 유지했습니다.
+기획자가 Unity 편집 화면에서 배치할 요소를 고르고 클릭이나 드래그로 맵을 만들 수 있는 도구를 구현했습니다. 시작 위치 지정, 빈 칸 한꺼번에 채우기, 삭제와 겹침 확인도 같은 화면에서 처리합니다.
 
-강제 Repaint를 없애고 `GridSystem` reference와 공개 property를 직접 사용했습니다. occupied position은 `HashSet`으로 구성해 겹침을 확인하고, child count가 바뀔 때만 다시 수집합니다.
+[맵 제작 도구](Assets/Scripts/Editor/GridTileEditor.cs) | [오브젝트 설정 데이터](Assets/Scripts/Runtime/CH3/Main/Data/CH3_LevelData.cs)
 
-#### 성능 개선 결과
+## 문제 해결 기록
 
-같은 장비와 scene에서 Editor main thread frame time을 1084.8ms에서 52.7ms로 줄였습니다.
+### 맵 수정이 프로그래머를 거쳐야 했던 문제
 
-## CH3 editor와 runtime
+처음에는 기획자가 스프레드시트로 맵 수정을 전달하면 프로그래머가 Unity 장면에 다시 배치했습니다. 작은 수정도 전달, 재배치와 실행 파일 확인을 반복해야 했습니다.
 
-```mermaid
-flowchart LR
-    A[기획자 편집] --> B[GridTileEditor]
-    B --> C[CH3_LevelData]
-    C --> D[scene object]
-    C --> E[BuildingObjectFactory]
-    D --> F[GridSystem]
-    E --> F
-    F --> G[occupied cell과 movement]
-```
+기획자가 Unity 편집 화면에서 직접 배치한 뒤 재생 버튼을 눌러 확인하도록 제작 도구를 만들었습니다. 편집 도구와 실제 게임이 같은 설정 데이터를 읽게 해 크기, 이미지와 충돌 범위가 실행 중에도 그대로 적용되도록 했습니다.
 
-editor 배치와 플레이 중 건설이 같은 data rule을 사용합니다. `GridSystem`은 occupied cell과 spawn을 관리하고 `BuildingObjectFactory`는 type에 맞는 runtime object를 만듭니다.
+마우스를 움직일 때마다 배치된 요소 전체를 검사하고 화면을 강제로 다시 그리는 작업도 반복되고 있었습니다. 배치된 칸을 저장해 요소 수가 달라졌을 때만 갱신하고 매 입력마다 실행하던 강제 화면 갱신을 제거했습니다.
 
-세부 흐름과 SuperArio, teleporter, Dancepace data는 [제작 도구 문서](docs/tooling.md)에 있습니다.
+### 점프 입력과 이동 계산의 시점 분리
 
-## 실행
+점프 입력은 입력 콜백에서 받고 캐릭터 이동은 고정된 물리 갱신 단계에서 계산합니다. 점프 요청을 0.2초 동안 저장하고 물리 갱신 단계에서 실행하도록 두 흐름을 나눴습니다.
 
-1. Unity Hub에서 Unity 2022.3.62f2로 프로젝트를 엽니다.
-2. package import가 끝날 때까지 기다립니다.
-3. main scene을 열고 Play를 실행합니다.
+[점프 입력 처리](Assets/Scripts/Runtime/CH2/SuperArio/Ario.cs) | [제작 도구 상세 설명](docs/tooling.md)
 
 ## 팀
 
